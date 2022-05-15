@@ -5,8 +5,11 @@
 #pragma once
 
 #include "Player.h"
-#include "PlayerService.h"
-#include "PlayerRepository.h"
+
+#include "PersonSex.h"
+
+#include "services.h"
+#include "repositories.h"
 
 class PlayerRegistrationService : public PlayerService {
 private:
@@ -16,7 +19,7 @@ public:
     PlayerRegistrationService(Player& player);
     virtual ~PlayerRegistrationService();
 
-    bool startRegistration();
-    bool finishRegistration(const string& password, Player::Sex sex);
+    bool beginRegistration();
+    bool endRegistration(const string& password, PersonSex::Sex sex);
 };
 

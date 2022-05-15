@@ -10,6 +10,9 @@
 
 /* actor */
 
+/* admin */
+#include "AdminAuthorizationService.h"
+
 /* object */
 
 /* player */

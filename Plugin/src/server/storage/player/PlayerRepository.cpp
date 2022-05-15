@@ -28,17 +28,7 @@ bool PlayerRepository::preload() {
 }
 
 bool PlayerRepository::isRegistered() {
-    format fmt = format("SELECT `id` FROM `accounts` WHERE `name` = '%s' LIMIT 1") % player.getName();
-
-    MySQLConnector connector(MainDatabase::getInstance());
-    connector.query(fmt.str());
-
-    SQLResult result = connector.storeResult();
-    if (!result) {
-        return false;
-    }
-
-    return result.getNumRows() > 0;
+    return (getUID() > 0);
 }
 
 bool PlayerRepository::loadAccount() {
@@ -63,8 +53,8 @@ bool PlayerRepository::loadAccount() {
 
     MYSQL_ROW row = result.fetchRow();
 
-    Player::Sex sex = Player::Sex(atoi(row[SEX]));
-    player.setSex(sex);
+    PersonSex::Sex sex = PersonSex::Sex(atoi(row[SEX]));
+    player.getSex()->setSex(sex);
 
     PersonSkin* skin = player.getSkin();
     skin->setSkin(atoi(row[SKIN]));
@@ -80,7 +70,7 @@ bool PlayerRepository::loadAccount() {
     return true;
 }
 
-unsigned int PlayerRepository::createAccount(const string& password, Player::Sex sex) {
+unsigned int PlayerRepository::createAccount(const string& password, PersonSex::Sex sex) {
     format fmt = format("INSERT INTO `accounts` (`name`, `password`, `sex`) VALUES ('%s', MD5('%s'), '%d')")
             % player.getName()->getName() % password % sex;
 
@@ -90,7 +80,7 @@ unsigned int PlayerRepository::createAccount(const string& password, Player::Sex
     return connector.getInsertedID();
 }
 
-unsigned int PlayerRepository::getAccountID() const {
+unsigned int PlayerRepository::getUID() const {
     format fmt = format(
             "SELECT `id` FROM `accounts` WHERE `name` = '%s' LIMIT 1")
             % player.getName()->getName();
@@ -113,7 +103,7 @@ unsigned int PlayerRepository::getAccountID() const {
     return atoi(row[ID]);
 }
 
-unsigned int PlayerRepository::getAccountID(const string& password) const {
+unsigned int PlayerRepository::getUID(const string& password) const {
     format fmt = format("SELECT `id` FROM `accounts` WHERE `name` = '%s' AND `password` = MD5('%s') LIMIT 1")
                  % player.getName()->getName() % password;
 
@@ -137,7 +127,7 @@ unsigned int PlayerRepository::getAccountID(const string& password) const {
 
 Language PlayerRepository::getLanguage() const {
     if (!player.getUID()) {
-        return LANGUAGE_RU;
+        return LANGUAGE_DEFAULT;
     }
 
     format fmt = format(

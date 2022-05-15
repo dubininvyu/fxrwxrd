@@ -29,8 +29,6 @@ public:
     AuthorizationDialog(Player& player);
     ~AuthorizationDialog();
 
-    bool isPasswordValid(const string& password);
-
     virtual bool format();
 
     virtual Result responseStart(const unsigned int response, unsigned int listItem, const string& inputText);

@@ -3,7 +3,9 @@
 //
 
 #include "PlayerConnectHandler.h"
+
 #include "services.h"
+#include "managers.h"
 
 PlayerConnectHandler::PlayerConnectHandler(Player& player) :
         PlayerEventHandler(player) {
@@ -19,8 +21,7 @@ bool PlayerConnectHandler::execute() {
     player.init();
 
     // authentication system
-    PlayerAuthenticationService authenticationService(player);
-    authenticationService.startAuthentication();
+    player.getService()->getAuthenticationService()->begin();
 
     return true;
 }

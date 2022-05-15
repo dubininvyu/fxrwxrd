@@ -6,8 +6,12 @@
 
 #include "Person.h"
 
+#include "Admin.h"
+
 #include "PlayerLocale.h"
-#include "PlayerDialog.h"
+#include "PlayerPassword.h"
+
+#include "managers.h"
 
 #include "texts.h"
 #include "Dialog.h"
@@ -26,8 +30,13 @@ protected:
     static Player* players[];
 
     /* main */
+    Admin* admin;
+    PlayerPassword* password;
+
     PlayerLocale* locale;
-    PlayerDialog* dialog;
+
+    DialogManager* dialog;
+    ServiceManager* service;
 
     /* others */
 public:
@@ -50,10 +59,15 @@ public:
     unsigned int getUID() const;
 
     /* main */
+    Admin* getAdmin();
+    PlayerPassword* getPassword();
+
     void setLocale(Language language);
     PlayerLocale* getLocale();
 
-    PlayerDialog* getDialog();
+    /* dynamic */
+    DialogManager* getDialog();
+    ServiceManager* getService();
 
     /* others */
 

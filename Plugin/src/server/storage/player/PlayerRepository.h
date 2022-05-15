@@ -4,10 +4,12 @@
 
 #pragma once
 
+#include "PersonSex.h"
 #include "MySQLRepository.h"
-#include "Player.h"
 #include "PlayerDisconnectHandler.h"
 #include "languages.h"
+
+class Player;
 
 class PlayerRepository : public MySQLRepository {
 private:
@@ -23,10 +25,10 @@ public:
     bool isRegistered();
 
     bool loadAccount();
-    unsigned int createAccount(const string& password, Person::Sex sex);
+    unsigned int createAccount(const string& password, PersonSex::Sex sex);
 
-    unsigned int getAccountID() const;
-    unsigned int getAccountID(const string& password) const;
+    unsigned int getUID() const;
+    unsigned int getUID(const string& password) const;
 
     Language getLanguage() const;
 };

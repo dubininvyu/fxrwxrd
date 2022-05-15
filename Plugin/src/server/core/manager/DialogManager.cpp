@@ -2,25 +2,25 @@
 // Created by dubininvyu on 10.05.2022.
 //
 
-#include "PlayerDialog.h"
+#include "DialogManager.h"
 
-PlayerDialog::PlayerDialog(Player* player) : player(player) {
+DialogManager::DialogManager(Player* player) : player(player) {
 
 }
 
-bool PlayerDialog::showDialog(Dialog* dialog) {
+bool DialogManager::showDialog(Dialog* dialog) {
     dialogs.insert(dialogs.end(), dialog);
     return dialog->show();
 }
 
-bool PlayerDialog::removeDialog(Dialog* dialog) {
+bool DialogManager::removeDialog(Dialog* dialog) {
     dialogs.remove(dialog);
     delete dialog;
 
     return true;
 }
 
-Dialog* PlayerDialog::getLastDialog() {
+Dialog* DialogManager::getLastDialog() {
     if (dialogs.empty()) {
         return nullptr;
     }
@@ -28,10 +28,10 @@ Dialog* PlayerDialog::getLastDialog() {
     return dialogs.back();
 }
 
-void PlayerDialog::setDialog(Dialog* dialog) {
+void DialogManager::setDialog(Dialog* dialog) {
     this->dialog = dialog;
 }
 
-Dialog* PlayerDialog::getDialog() {
+Dialog* DialogManager::getDialog() {
     return this->dialog;
 }

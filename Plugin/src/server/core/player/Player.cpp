@@ -4,6 +4,7 @@
 
 
 #include "Player.h"
+#include "ServiceManager.h"
 
 using namespace std;
 
@@ -22,12 +23,28 @@ Player::Player(unsigned int playerID) : Person(playerID, true) {
     spawned = false;
     authorized = false;
 
+    // fields
+    admin = new Admin(this);
+    password = new PlayerPassword(this);
+
+    // managers
+    dialog = new DialogManager(this);
+    service = new ServiceManager(this);
+
+    // systems
     locale = &PlayerLocale::getLocale(LANGUAGE_DEFAULT);
-    dialog = new PlayerDialog(this);
 }
 
 Player::~Player() {
+    // fields
+    delete admin;
+    delete password;
 
+    // managers
+    delete dialog;
+    delete service;
+
+    // systems
 }
 
 Player* Player::create(const int playerID) {
@@ -95,6 +112,9 @@ bool Player::isValid(const unsigned int playerID) {
 }
 
 /* setters & getters */
+Admin* Player::getAdmin() {
+    return this->admin;
+}
 
 void Player::setUID(const unsigned int uid) {
     this->uid = uid;
@@ -104,6 +124,10 @@ unsigned int Player::getUID() const {
 }
 
 /* main */
+PlayerPassword* Player::getPassword() {
+    return password;
+}
+
 void Player::setLocale(Language language) {
     this->locale = &PlayerLocale::getLocale(language);
 }
@@ -112,8 +136,13 @@ PlayerLocale* Player::getLocale() {
     return locale;
 }
 
-PlayerDialog* Player::getDialog() {
+/* dynamic */
+DialogManager* Player::getDialog() {
     return dialog;
+}
+
+ServiceManager* Player::getService() {
+    return service;
 }
 
 /* others */

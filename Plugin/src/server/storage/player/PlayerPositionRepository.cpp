@@ -4,6 +4,7 @@
 
 #include "PlayerPositionRepository.h"
 
+#include "Player.h"
 #include "MainDatabase.h"
 #include "boost/format.hpp"
 

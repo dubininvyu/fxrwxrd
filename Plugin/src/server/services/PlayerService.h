@@ -5,12 +5,15 @@
 #pragma once
 
 #include "Service.h"
-#include "Player.h"
+
+class Player;
 
 class PlayerService : public Service {
 private:
 protected:
     Player& player;
+
+    unsigned int stage;
 
     PlayerService(Player& player);
 public:

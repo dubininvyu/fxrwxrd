@@ -4,6 +4,7 @@
 
 #include "PlayerSpawnHandler.h"
 
+#include "Player.h"
 #include "natives.h"
 
 PlayerSpawnHandler::PlayerSpawnHandler(Player& player) :

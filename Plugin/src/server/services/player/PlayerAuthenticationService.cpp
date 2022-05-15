@@ -4,10 +4,11 @@
 
 #include "PlayerAuthenticationService.h"
 
-#include "dialogs.h"
-#include "PlayerRepository.h"
+#include "Player.h"
 
+#include "dialogs.h"
 #include "services.h"
+#include "repositories.h"
 
 PlayerAuthenticationService::PlayerAuthenticationService(Player& player) :
     PlayerService(player), playerRepository(player, Repository::MODE_NOPE) {
@@ -17,39 +18,120 @@ PlayerAuthenticationService::~PlayerAuthenticationService() {
 
 }
 
-bool PlayerAuthenticationService::startAuthentication() {
+void PlayerAuthenticationService::setStage(AuthenticationStage stage) {
+    this->stage = stage;
+}
 
+void PlayerAuthenticationService::nextStage() {
+    stage++;
+}
+
+void PlayerAuthenticationService::begin() {
     // fix arrows and 'Spawn' button
     player.getCamera()->setSpectatingMode(PersonCamera::MODE_ON);
 
-    // authentication
-    unsigned int accountID = playerRepository.getAccountID();
+    // begin
+    this->stage = STAGE_PLAYER_AUTHENTICATION;
+    execute();
+}
 
-    if (!accountID) { // registration
-        PlayerRegistrationService registrationService(player);
-        registrationService.startRegistration();
-        return true;
+void PlayerAuthenticationService::execute() {
+    switch (stage) {
+        case STAGE_PLAYER_AUTHENTICATION: {
+            beginPlayerAuthentication();
+            break;
+        }
+        case STAGE_ADMIN_AUTHENTICATION: {
+            beginAdminAuthentication();
+            break;
+        }
+
+        case STAGE_COUNT: {
+            end(ERROR_NONE);
+            break;
+        }
     }
+}
 
-    // authorization
+void PlayerAuthenticationService::beginPlayerAuthentication() {
+    unsigned int accountID = playerRepository.getUID();
     player.setUID(accountID);
 
     Language language = playerRepository.getLanguage();
     player.setLocale(language);
 
-    PlayerAuthorizationService authorizationService(player);
-    authorizationService.startAuthorization();
-
-    return true;
+    if (!accountID) {
+        beginPlayerRegistration();
+    }
+    else {
+        beginPlayerAuthorization();
+    }
 }
 
-bool PlayerAuthenticationService::finishAuthentication() {
-    // fix arrows and 'Spawn' button
-    player.getCamera()->setSpectatingMode(PersonCamera::MODE_OFF);
+void PlayerAuthenticationService::beginPlayerAuthorization() {
+    PlayerAuthorizationService authorizationService(player);
+    authorizationService.beginAuthorization();
+}
 
-    // create player session
-    PlayerSessionService sessionService(player);
-    sessionService.createConnectSession();
+void PlayerAuthenticationService::endPlayerAuthorization() {
+    endPlayerAuthentication();
+}
 
-    return true;
+void PlayerAuthenticationService::endPlayerAuthentication() {
+    nextStage();
+    execute();
+}
+
+void PlayerAuthenticationService::beginPlayerRegistration() {
+    PlayerRegistrationService registrationService(player);
+    registrationService.beginRegistration();
+}
+
+void PlayerAuthenticationService::endPlayerRegistration() {
+    stage = STAGE_PLAYER_AUTHENTICATION;
+    execute();
+}
+
+void PlayerAuthenticationService::beginAdminAuthentication() {
+    AdminRepository adminRepository(player);
+    unsigned int adminID = adminRepository.getUID();
+    player.getAdmin()->setUID(adminID);
+
+    if (!adminID) {
+        // player is not admin, go to the next stage
+        nextStage();
+        return execute();
+    }
+
+    beginAdminAuthorization();
+}
+
+void PlayerAuthenticationService::beginAdminAuthorization() {
+    AdminAuthorizationService authorizationService(player);
+    authorizationService.beginAuthorization();
+}
+
+void PlayerAuthenticationService::endAdminAuthorization() {
+    endAdminAuthentication();
+}
+
+void PlayerAuthenticationService::endAdminAuthentication() {
+    nextStage();
+    execute();
+}
+
+
+void PlayerAuthenticationService::end(AuthenticationError error) {
+    if (error == ERROR_NONE) {
+        // fix arrows and 'Spawn' button
+        player.getCamera()->setSpectatingMode(PersonCamera::MODE_OFF);
+
+        // create player session
+        PlayerSessionService sessionService(player);
+        sessionService.createConnectSession();
+    }
+
+    if (error == ERROR_UNKNOWN) {
+        player.sendMessage(player.getLocale()->getText(TEXT_ERROR));
+    }
 }

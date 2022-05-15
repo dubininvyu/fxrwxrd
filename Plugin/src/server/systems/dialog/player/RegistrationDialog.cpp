@@ -4,6 +4,7 @@
 
 #include "RegistrationDialog.h"
 
+#include "Player.h"
 #include "dialogs.h"
 #include "services.h"
 #include "repositories.h"
@@ -52,7 +53,7 @@ Dialog::Result RegistrationDialog::responseStart(const unsigned int response, un
             return RESULT_REPEAT;
         }
 
-        if (inputText.length() < 6) {
+        if (!PlayerPassword::isValid(inputText)) {
             return RESULT_REPEAT;
         }
 
@@ -60,7 +61,7 @@ Dialog::Result RegistrationDialog::responseStart(const unsigned int response, un
     }
 
     if (page == PAGE_SEX) {
-        sex = Player::Sex(response);
+        sex = PersonSex::Sex(response);
     }
 
     return result;
@@ -68,11 +69,12 @@ Dialog::Result RegistrationDialog::responseStart(const unsigned int response, un
 
 Dialog::Result RegistrationDialog::responseEnd(const unsigned int response, unsigned int listItem, const string& inputText) {
     PlayerRegistrationService registrationService(player);
-    bool success = registrationService.finishRegistration(password, sex);
+    bool success = registrationService.endRegistration(password, sex);
 
     if (success) {
         PlayerAuthenticationService authenticationService(player);
-        authenticationService.startAuthentication();
+        authenticationService.beginPlayerAuthentication();
+
         return RESULT_CLOSE;
     }
 

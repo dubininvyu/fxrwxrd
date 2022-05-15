@@ -5,6 +5,7 @@
 #pragma once
 
 #include "PlayerRepository.h"
+#include "PersonPosition.h"
 
 class PlayerPositionRepository : public PlayerRepository {
 private:

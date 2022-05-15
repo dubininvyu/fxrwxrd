@@ -6,6 +6,10 @@
 
 #include "PlayerEventHandler.h"
 
+#include <string>
+
+using namespace std;
+
 class PlayerIncomingConnectionHandler : public PlayerEventHandler {
 private:
 protected:

@@ -7,6 +7,10 @@
 
 #include "PlayerEventHandler.h"
 
+#include <string>
+
+using namespace std;
+
 class PlayerTextHandler : public PlayerEventHandler {
 private:
 protected:

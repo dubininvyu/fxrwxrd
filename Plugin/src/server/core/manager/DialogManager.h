@@ -2,7 +2,6 @@
 // Created by dubininvyu on 10.05.2022.
 //
 
-
 #pragma once
 
 #include "Dialog.h"
@@ -13,7 +12,7 @@ using namespace std;
 
 class Player;
 
-class PlayerDialog {
+class DialogManager {
 public:
 private:
 protected:
@@ -22,7 +21,7 @@ protected:
     Dialog* dialog; // current dialog
     list<Dialog*> dialogs;
 public:
-    PlayerDialog(Player* player);
+    DialogManager(Player* player);
 
     bool showDialog(Dialog* dialog);
     bool removeDialog(Dialog* dialog);

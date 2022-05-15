@@ -4,8 +4,9 @@
 
 #include "PlayerRequestClassHandler.h"
 
+#include "Player.h"
 #include "natives.h"
-#include "PlayerAuthenticationService.h"
+#include "services.h"
 
 PlayerRequestClassHandler::PlayerRequestClassHandler(Player& player, unsigned int classID) :
         PlayerEventHandler(player), classID(classID) {

@@ -16,7 +16,7 @@ public:
     PlayerAuthorizationService(Player& player);
     virtual ~PlayerAuthorizationService();
 
-    bool startAuthorization();
-    bool finishAuthorization();
+    bool beginAuthorization();
+    bool endAuthorization();
 };
 

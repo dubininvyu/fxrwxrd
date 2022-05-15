@@ -3,6 +3,8 @@
 //
 
 #include "natives.h"
+
+#include "Player.h"
 #include "dialogs.h"
 #include "services.h"
 #include "repositories.h"
@@ -15,16 +17,6 @@ AuthorizationDialog::AuthorizationDialog(Player& player) : Dialog(player) {
 
 AuthorizationDialog::~AuthorizationDialog() {
 
-}
-
-bool AuthorizationDialog::isPasswordValid(const string& password) {
-    unsigned int length = password.length();
-
-    if (!(length >= Player::MIN_LENGTH_PASSWORD && length <= Player::MAX_LENGTH_PASSWORD)) {
-        return false;
-    }
-
-    return true;
 }
 
 bool AuthorizationDialog::format() {
@@ -59,7 +51,7 @@ Dialog::Result AuthorizationDialog::responseStart(const unsigned int response, u
             return RESULT_REPEAT;
         }
 
-        if (!isPasswordValid(inputText)) {
+        if (!PlayerPassword::isValid(inputText)) {
             wrongAttemptsCount++;
             return RESULT_REPEAT;
         }
@@ -72,7 +64,7 @@ Dialog::Result AuthorizationDialog::responseStart(const unsigned int response, u
             return RESULT_REPEAT;
         }
 
-        if (!isPasswordValid(inputText)) {
+        if (!PlayerPassword::isValid(inputText)) {
             wrongAttemptsCount++;
             return RESULT_REPEAT;
         }
@@ -85,7 +77,7 @@ Dialog::Result AuthorizationDialog::responseStart(const unsigned int response, u
 
 Dialog::Result AuthorizationDialog::responseEnd(const unsigned int response, unsigned int listItem, const string& inputText) {
     PlayerAuthorizationService authorizationService(player);
-    bool result = authorizationService.finishAuthorization();
+    bool result = authorizationService.endAuthorization();
 
     if (result) { // it's okay
         return RESULT_CLOSE;

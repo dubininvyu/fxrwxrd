@@ -4,6 +4,9 @@
 
 #include "PlayerDialogResponseHandler.h"
 
+#include "Player.h"
+#include "Dialog.h"
+
 PlayerDialogResponseHandler::PlayerDialogResponseHandler(Player& player, const int dialogID, const int response, const int item, const string& text) :
         PlayerEventHandler(player), dialogID(dialogID), response(response), item(item), text(text) {
 }

@@ -4,6 +4,9 @@
 
 #pragma once
 
+/* admin */
+#include "AdminRepository.h"
+
 /* mysql */
 #include "DatabaseConfigRepository.h"
 

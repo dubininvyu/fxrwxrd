@@ -16,19 +16,20 @@ PlayerRegistrationService::~PlayerRegistrationService() {
 
 }
 
-bool PlayerRegistrationService::startRegistration() {
+bool PlayerRegistrationService::beginRegistration() {
 
     // show registration dialog
     Dialog* dialog = new RegistrationDialog(player);
     return player.getDialog()->showDialog(dialog);
 }
 
-bool PlayerRegistrationService::finishRegistration(const string& password, Player::Sex sex) {
+bool PlayerRegistrationService::endRegistration(const string& password, PersonSex::Sex sex) {
 
     // player data
     unsigned int accountID = playerRepository.createAccount(password, sex);
 
     if (!accountID) {
+        player.getService()->getAuthenticationService()->end(PlayerAuthenticationService::ERROR_UNKNOWN);
         return false;
     }
 
@@ -39,6 +40,7 @@ bool PlayerRegistrationService::finishRegistration(const string& password, Playe
     unsigned int insertedID = positionRepository.createPosition();
 
     if (!insertedID) {
+        player.getService()->getAuthenticationService()->end(PlayerAuthenticationService::ERROR_UNKNOWN);
         return false;
     }
 

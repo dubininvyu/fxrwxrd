@@ -6,6 +6,8 @@
 
 #include "Dialog.h"
 #include "Player.h"
+#include "PersonSex.h"
+
 #include <string>
 
 using namespace std;
@@ -21,7 +23,7 @@ private:
         COUNT
     };
 protected:
-    Player::Sex sex;
+    PersonSex::Sex sex;
     string password; // local player's password repository
 public:
     RegistrationDialog(Player& player);

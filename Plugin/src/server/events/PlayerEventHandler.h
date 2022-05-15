@@ -4,8 +4,9 @@
 
 #pragma once
 
-#include "Player.h"
 #include "EventHandler.h"
+
+class Player;
 
 class PlayerEventHandler : public EventHandler {
 private:

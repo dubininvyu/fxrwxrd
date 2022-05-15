@@ -16,22 +16,32 @@ PlayerAuthorizationService::~PlayerAuthorizationService() {
 
 }
 
-bool PlayerAuthorizationService::startAuthorization() {
+bool PlayerAuthorizationService::beginAuthorization() {
 
     // show authorization dialog
     Dialog* dialog = new AuthorizationDialog(player);
     return player.getDialog()->showDialog(dialog);
 }
 
-bool PlayerAuthorizationService::finishAuthorization() {
-    bool result = true;
+bool PlayerAuthorizationService::endAuthorization() {
+    bool result;
 
     // player data
-    result &= playerRepository.loadAccount();
+    result = playerRepository.loadAccount();
+
+    if (!result) {
+        player.getService()->getAuthenticationService()->end(PlayerAuthenticationService::ERROR_UNKNOWN);
+        return false;
+    }
 
     // player position
     PlayerPositionRepository positionRepository(player);
-    result &= positionRepository.loadPosition();
+    result = positionRepository.loadPosition();
+
+    if (!result) {
+        player.getService()->getAuthenticationService()->end(PlayerAuthenticationService::ERROR_UNKNOWN);
+        return false;
+    }
 
     // set authorization status
     player.setAuthorized(true);
@@ -42,8 +52,7 @@ bool PlayerAuthorizationService::finishAuthorization() {
     spawn->getTeam().setTeam(PersonTeam::TEAM_NO);
     spawn->setSpawn(); // confirm changes
 
-    PlayerAuthenticationService authenticationService(player);
-    authenticationService.finishAuthentication();
+    player.getService()->getAuthenticationService()->endPlayerAuthorization();
 
-    return result;
+    return true;
 }
