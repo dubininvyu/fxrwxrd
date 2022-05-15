@@ -6,12 +6,20 @@
 
 vector<Player*> Admin::admins = {};
 
-Admin::Admin(Player* player) : player(player), level(LEVEL_NONE) {
+Admin::Admin(Player* player) : player(player), level(LEVEL_NONE), authorized(false) {
     password = new AdminPassword();
 }
 
 Admin::~Admin() {
     delete password;
+}
+
+void Admin::setUID(const unsigned int uid) {
+    this->uid = uid;
+}
+
+unsigned int Admin::getUID() const {
+    return this->uid;
 }
 
 bool Admin::isAdmin() const {
@@ -54,4 +62,12 @@ void Admin::setName(const string& name) {
 
 string Admin::getName() const {
     return this->name;
+}
+
+void Admin::setAuthorized(const bool isAuthorized) {
+    this->authorized = isAuthorized;
+}
+
+bool Admin::isAuthorized() const {
+    return this->authorized;
 }

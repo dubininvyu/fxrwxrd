@@ -31,15 +31,21 @@ protected:
     AdminLevel level;
     AdminPassword* password;
 
+    unsigned int uid;
     string name;
 
     static vector<Player*> admins;
+
+    bool authorized;
 
     void giveAdmin();
     void takeAdmin();
 public:
     Admin(Player* player);
     ~Admin();
+
+    void setUID(const unsigned int uid);
+    unsigned int getUID() const;
 
     bool isAdmin() const;
 
@@ -48,5 +54,8 @@ public:
 
     void setName(const string& name);
     string getName() const;
+
+    void setAuthorized(const bool isAuthorized);
+    bool isAuthorized() const;
 };
 

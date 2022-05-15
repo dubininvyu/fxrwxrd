@@ -15,13 +15,13 @@
 #include "PersonLevel.h"
 #include "PersonName.h"
 #include "PersonPosition.h"
+#include "PersonSex.h"
 #include "PersonSkin.h"
 #include "PersonSpawn.h"
 #include "PersonTeam.h"
 #include "PersonCamera.h"
 
 #include <string>
-
 
 using namespace std;
 
@@ -31,11 +31,6 @@ public:
     static const unsigned int MIN_ID = 0;
     static const unsigned int MAX_ID = 499;
     static const unsigned int MAX_COUNT = (MAX_ID - MIN_ID + 1);
-
-    enum Sex {
-        SEX_MALE = 0,
-        SEX_FEMALE
-    };
 private:
 protected:
     int id;
@@ -47,12 +42,11 @@ protected:
     PersonLevel* level;
     PersonName* name;
     PersonPosition* position;
+    PersonSex* sex;
     PersonSkin* skin;
     PersonSpawn* spawn;
     PersonTeam* team;
     PersonCamera* camera;
-
-    Sex sex;
 
     /* others */
     bool spawned;
@@ -62,7 +56,7 @@ protected:
 public:
     virtual ~Person();
 
-    void setID(const int id) = delete;
+    void setID(const int id);
     int getID() const;
 
     void setActive(const bool active);
@@ -74,17 +68,11 @@ public:
     PersonLevel* getLevel();
     PersonName* getName();
     PersonPosition* getPosition();
+    PersonSex* getSex();
     PersonSkin* getSkin();
     PersonSpawn* getSpawn();
     PersonTeam* getTeam();
     PersonCamera* getCamera();
-
-    /* sex */
-    void setSex(Sex sex);
-    Sex getSex() const;
-
-    bool isMale() const;
-    bool isFemale() const;
 
     /* others */
     void setSpawned(bool isSpawned);

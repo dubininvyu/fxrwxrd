@@ -13,6 +13,7 @@ Person::Person(const int id, const bool active) : Animal(), LegalEntity(), Track
     level = new PersonLevel(this);
     name = new PersonName(this);
     position = new PersonPosition(this);
+    sex = new PersonSex(this);
     skin = new PersonSkin(this);
     spawn = new PersonSpawn(this);
     team = new PersonTeam(this);
@@ -26,15 +27,16 @@ Person::~Person() {
     delete level;
     delete name;
     delete position;
+    delete sex;
     delete skin;
     delete spawn;
     delete team;
     delete camera;
 }
 
-/*void Person::setID(const int id){
+void Person::setID(const int id){
     this->id = id;
-}*/
+}
 
 int Person::getID() const {
     return this->id;
@@ -72,6 +74,10 @@ PersonPosition* Person::getPosition() {
     return this->position;
 }
 
+PersonSex* Person::getSex() {
+    return sex;
+}
+
 PersonSkin* Person::getSkin() {
     return this->skin;
 }
@@ -86,22 +92,6 @@ PersonTeam* Person::getTeam() {
 
 PersonCamera* Person::getCamera() {
     return this->camera;
-}
-
-void Person::setSex(Sex sex) {
-    this->sex = sex;
-}
-
-Person::Sex Person::getSex() const {
-    return this->sex;
-}
-
-bool Person::isMale() const {
-    return (sex == SEX_MALE);
-}
-
-bool Person::isFemale() const {
-    return (sex == SEX_FEMALE);
 }
 
 /* others */
