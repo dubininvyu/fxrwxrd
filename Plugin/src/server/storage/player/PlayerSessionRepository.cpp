@@ -31,7 +31,7 @@ unsigned long long PlayerSessionRepository::createSession(const int online, cons
 }
 
 bool PlayerSessionRepository::updateSession(const PlayerDisconnectHandler::Reason reason) {
-    format fmt = format("UPDATE `accounts_sessions` SET `online` = '-1', `disconnect_reason` = '%d' WHERE `player_id` = '%d' AND `online` != -1 LIMIT 1")
+    format fmt = format("UPDATE `accounts_sessions` SET `online` = '-1', `disconnect_reason` = '%d' WHERE `player_id` = '%d' AND `online` != -1")
                  % reason % player.getUID();
 
     MySQLConnector connector(MainDatabase::getInstance());

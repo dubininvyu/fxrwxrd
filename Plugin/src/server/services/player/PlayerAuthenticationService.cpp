@@ -112,6 +112,7 @@ void PlayerAuthenticationService::beginAdminAuthorization() {
 }
 
 void PlayerAuthenticationService::endAdminAuthorization() {
+    player.sendMessage("You are logged as administrator");
     endAdminAuthentication();
 }
 
