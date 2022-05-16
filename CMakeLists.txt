@@ -131,6 +131,7 @@ target_link_directories(${PLUGIN_NAME_LOWERCASE} PRIVATE
 
 target_link_libraries(${PLUGIN_NAME_LOWERCASE}
         libmysql.a
+        libboost_program_options-mgw8-mt-d-x32-1_79.a
         )
 
 target_compile_features(${PLUGIN_NAME_LOWERCASE} PRIVATE cxx_range_for)

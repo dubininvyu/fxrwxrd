@@ -3,10 +3,14 @@
 //
 
 #include "AdminCommand.h"
-#include "admin/GotoCommand.h"
+#include "admin_commands.h"
+
+#define COMMAND(command, function)\
+    {command, [](Player& player, const string& params) {return new function(player, params);}}
 
 AdminCommand::mapCommands_type AdminCommand::commands = {
-        {"goto",[](Player& player, const string& params) {return new GotoCommand(player, params);}},
+        COMMAND("goto", GotoCommand),
+        COMMAND("sethp", SetHealthCommand),
 };
 
 AdminCommand::AdminCommand(Player& player, string params) : Command(player, params) {
@@ -14,13 +18,17 @@ AdminCommand::AdminCommand(Player& player, string params) : Command(player, para
 }
 
 Command* AdminCommand::getCommand(Player& player, const string& command, const string& params) {
+    if (!commands.count(command)) {
+        return nullptr;
+    }
+
     return commands[command](player, params);
 }
 
-void AdminCommand::setMinAdminRank(unsigned int minAdminRank) {
-    this->minAdminRank = minAdminRank;
+void AdminCommand::setMinAdminLevel(unsigned int minAdminLevel) {
+    this->minAdminLevel = minAdminLevel;
 }
 
-unsigned int AdminCommand::getMinAdminRank() {
-    return this->minAdminRank;
+unsigned int AdminCommand::getMinAdminLevel() const {
+    return this->minAdminLevel;
 }

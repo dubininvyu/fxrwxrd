@@ -13,5 +13,9 @@ SystemCommand::SystemCommand(Player& player, const string& params) : Command(pla
 }
 
 Command* SystemCommand::getCommand(Player& player, const string& command, const string& params) {
+    if (!commands.count(command)) {
+        return nullptr;
+    }
+
     return commands[command](player, params);
 }

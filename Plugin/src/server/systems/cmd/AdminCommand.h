@@ -9,7 +9,7 @@
 class AdminCommand : public Command {
 private:
 protected:
-    unsigned int minAdminRank;
+    unsigned int minAdminLevel;
 
     static mapCommands_type commands;
 
@@ -19,6 +19,6 @@ public:
 
     virtual bool execute() = 0;
 
-    void setMinAdminRank(unsigned int minAdminRank);
-    unsigned int getMinAdminRank();
+    void setMinAdminLevel(unsigned int minAdminLevel);
+    unsigned int getMinAdminLevel() const;
 };

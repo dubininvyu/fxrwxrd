@@ -61,6 +61,8 @@ bool AdminRepository::loadAdmin() {
 
     string name = row[NAME];
     player.getAdmin()->setName(name);
+
+    return true;
 }
 
 unsigned int AdminRepository::createAdmin(const Admin::AdminLevel level, const string& password) {

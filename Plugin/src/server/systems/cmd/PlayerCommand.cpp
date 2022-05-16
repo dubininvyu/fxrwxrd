@@ -13,5 +13,9 @@ PlayerCommand::PlayerCommand(Player& player, const string& params) : Command(pla
 }
 
 Command* PlayerCommand::getCommand(Player& player, const string& command, const string& params) {
+    if (!commands.count(command)) {
+        return nullptr;
+    }
+
     return commands[command](player, params);
 }
