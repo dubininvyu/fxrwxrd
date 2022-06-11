@@ -8,7 +8,7 @@
 #include "services.h"
 #include "repositories.h"
 
-AdminAuthorizationService::AdminAuthorizationService(Player& player) :
+AdminAuthorizationService::AdminAuthorizationService(Player* player) :
     PlayerService(player), adminRepository(player, Repository::MODE_NOPE) {
 }
 
@@ -32,14 +32,14 @@ bool AdminAuthorizationService::endAuthorization() {
     result = adminRepository.loadAdmin();
 
     if (!result) {
-        player.getService()->getAuthenticationService()->end(PlayerAuthenticationService::ERROR_UNKNOWN);
+        //player.getSystem()->getAuthenticationSystem()->end(PlayerAuthenticationSystem::ERROR_UNKNOWN);
         return false;
     }
 
     // set authorization status
-    player.getAdmin()->setAuthorized(true);
+    player->getAdmin()->setAuthorized(true);
 
     // end authorization
-    player.getService()->getAuthenticationService()->endAdminAuthorization();
+    //player.getSystem()->getAuthenticationSystem()->endAdminAuthorization();
     return true;
 }

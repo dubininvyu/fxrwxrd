@@ -7,11 +7,11 @@
 #include "Color.h"
 #include "natives.h"
 
-Dialog::Dialog(Player& player) : Dialog(player, "", "", "", "") {
+Dialog::Dialog(Player* player) : Dialog(player, "", "", "", "") {
 
 }
 
-Dialog::Dialog(Player& player, const string& caption, const string& info, const string& button1, const string& button2) :
+Dialog::Dialog(Player* player, const string& caption, const string& info, const string& button1, const string& button2) :
         player(player), caption(caption), info(info), button{button1, button2} {
 
     page = 0;
@@ -30,12 +30,12 @@ bool Dialog::format() {
 }
 
 bool Dialog::show() {
-    player.getDialog()->setDialog(this);
+    player->getDialogManager()->setDialog(this);
 
     format();
 
     return api_server::native::ShowPlayerDialog(
-            player.getID(),
+            player->getID(),
             dialog,
             style,
             caption.c_str(),
@@ -46,7 +46,7 @@ bool Dialog::show() {
 }
 
 void Dialog::hide() {
-    api_server::native::ShowPlayerDialog(player.getID(), DIALOG_NOPE, STYLE_MSGBOX, "", "", "", "");
+    api_server::native::ShowPlayerDialog(player->getID(), DIALOG_NOPE, STYLE_MSGBOX, "", "", "", "");
 }
 
 Dialog::Result Dialog::response(const unsigned int response, unsigned int listItem, const string& inputText) {

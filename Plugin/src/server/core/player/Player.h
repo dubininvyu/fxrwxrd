@@ -20,10 +20,7 @@
 
 class Player : public Person {
 public:
-    static const unsigned int MAX_LENGTH_IP;
     static const unsigned int MAX_LENGTH_SERIAL;
-    static const unsigned int MIN_LENGTH_PASSWORD;
-    static const unsigned int MAX_LENGTH_PASSWORD;
 private:
 protected:
     unsigned int uid;
@@ -35,8 +32,8 @@ protected:
 
     PlayerLocale* locale;
 
-    DialogManager* dialog;
-    ServiceManager* service;
+    DialogManager* dialogManager;
+    StateMachineManager* stateMachineManager;
 
     /* others */
 public:
@@ -63,11 +60,11 @@ public:
     PlayerPassword* getPassword();
 
     void setLocale(Language language);
-    PlayerLocale* getLocale();
+    PlayerLocale* getLocale() const;
 
-    /* dynamic */
-    DialogManager* getDialog();
-    ServiceManager* getService();
+    /* managers */
+    DialogManager* getDialogManager();
+    StateMachineManager* getStateMachineManager();
 
     /* others */
 
@@ -75,8 +72,8 @@ public:
     void init();
 
     /* natives */
-    bool sendMessage(Text text);
-    bool sendMessage(const string& message);
+    bool sendMessage(Text text) const;
+    bool sendMessage(const string& message) const;
     static bool sendMessageToAll(Text text);
     static bool sendMessageToAll(const string& message);
 

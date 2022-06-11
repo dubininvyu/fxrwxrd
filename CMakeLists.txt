@@ -64,6 +64,8 @@ file(GLOB PLUGIN_SRC # project files
         Plugin/src/*/*/*/*/*/*/*/*/*.h
         Plugin/src/*/*/*/*/*/*/*/*/*/*.cpp
         Plugin/src/*/*/*/*/*/*/*/*/*/*.h
+        Plugin/src/*/*/*/*/*/*/*/*/*/*/*.cpp
+        Plugin/src/*/*/*/*/*/*/*/*/*/*/*.h
         )
 
 HEADER_DIRECTORIES(PLUGIN_DIR)

@@ -15,7 +15,7 @@ protected:
     bool isHealth;
     bool isPlayerID;
 public:
-    SetHealthCommand(Player& player, const string& params);
+    SetHealthCommand(Player* player, const string& params);
 
     virtual bool execute();
 

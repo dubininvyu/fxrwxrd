@@ -12,12 +12,16 @@ PlayerPassword::PlayerPassword(Player* player, const string& password) : player(
 
 }
 
-bool PlayerPassword::setPassword(const string& password) {
+bool PlayerPassword::setPassword(const string& password, const bool reWrite) {
     if (!isValid(password)) {
         return false;
     }
 
     this->password = password;
+
+    if (reWrite) {
+        // saving password into database
+    }
 
     return true;
 }

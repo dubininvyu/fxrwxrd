@@ -13,10 +13,10 @@ private:
 protected:
     PlayerRepository playerRepository;
 public:
-    PlayerAuthorizationService(Player& player);
+    PlayerAuthorizationService(Player* player);
     virtual ~PlayerAuthorizationService();
 
-    bool beginAuthorization();
+    bool beginPasswordAuthorization();
     bool endAuthorization();
 };
 

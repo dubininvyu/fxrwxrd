@@ -11,11 +11,11 @@ class Player;
 class PlayerService : public Service {
 private:
 protected:
-    Player& player;
+    Player* player;
 
     unsigned int stage;
 
-    PlayerService(Player& player);
+    PlayerService(Player* player);
 public:
     virtual ~PlayerService() = 0;
 };

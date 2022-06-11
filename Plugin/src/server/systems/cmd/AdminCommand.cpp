@@ -6,18 +6,18 @@
 #include "admin_commands.h"
 
 #define COMMAND(command, function)\
-    {command, [](Player& player, const string& params) {return new function(player, params);}}
+    {command, [](Player* player, const string& params) {return new function(player, params);}}
 
 AdminCommand::mapCommands_type AdminCommand::commands = {
         COMMAND("goto", GotoCommand),
         COMMAND("sethp", SetHealthCommand),
 };
 
-AdminCommand::AdminCommand(Player& player, string params) : Command(player, params) {
+AdminCommand::AdminCommand(Player* player, string params) : Command(player, params) {
 
 }
 
-Command* AdminCommand::getCommand(Player& player, const string& command, const string& params) {
+Command* AdminCommand::getCommand(Player* player, const string& command, const string& params) {
     if (!commands.count(command)) {
         return nullptr;
     }

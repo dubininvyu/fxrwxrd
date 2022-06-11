@@ -13,7 +13,7 @@ private:
 protected:
     PlayerPositionRepository positionRepository;
 public:
-    PlayerPositionService(Player& player);
+    PlayerPositionService(Player* player);
     virtual ~PlayerPositionService();
 
     void savePosition();

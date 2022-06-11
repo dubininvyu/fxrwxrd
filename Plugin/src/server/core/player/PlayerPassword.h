@@ -22,7 +22,7 @@ protected:
 public:
     PlayerPassword(Player* player, const string& password = "");
 
-    bool setPassword(const string& password);
+    bool setPassword(const string& password, const bool reWrite = true);
     string getPassword() const;
 
     bool isValid();

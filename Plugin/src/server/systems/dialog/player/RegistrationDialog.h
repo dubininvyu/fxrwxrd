@@ -15,7 +15,7 @@ using namespace std;
 class Player;
 
 class RegistrationDialog : public Dialog {
-private:
+public:
     enum Page {
         PAGE_PASSWORD = 0,
         PAGE_SEX,
@@ -23,10 +23,9 @@ private:
         COUNT
     };
 protected:
-    PersonSex::Sex sex;
-    string password; // local player's password repository
+    Page page;
 public:
-    RegistrationDialog(Player& player);
+    RegistrationDialog(Player* player, Page page);
     ~RegistrationDialog();
 
     virtual bool format();

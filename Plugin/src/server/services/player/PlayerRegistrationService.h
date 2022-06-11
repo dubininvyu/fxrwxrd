@@ -16,10 +16,11 @@ private:
 protected:
     PlayerRepository playerRepository;
 public:
-    PlayerRegistrationService(Player& player);
+    PlayerRegistrationService(Player* player);
     virtual ~PlayerRegistrationService();
 
-    bool beginRegistration();
-    bool endRegistration(const string& password, PersonSex::Sex sex);
+    bool beginPasswordRegistration();
+    bool beginSexRegistration();
+    bool endRegistration();
 };
 

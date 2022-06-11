@@ -13,9 +13,9 @@ protected:
 
     static mapCommands_type commands;
 
-    AdminCommand(Player& player, const string params);
+    AdminCommand(Player* player, const string params);
 public:
-    static Command* getCommand(Player& player, const string& command, const string& params);
+    static Command* getCommand(Player* player, const string& command, const string& params);
 
     virtual bool execute() = 0;
 

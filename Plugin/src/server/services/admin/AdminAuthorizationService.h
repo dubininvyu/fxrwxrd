@@ -14,7 +14,7 @@ private:
 protected:
     AdminRepository adminRepository;
 public:
-    AdminAuthorizationService(Player& player);
+    AdminAuthorizationService(Player* player);
     virtual ~AdminAuthorizationService();
 
     bool beginAuthorization();

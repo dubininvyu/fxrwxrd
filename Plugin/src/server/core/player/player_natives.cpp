@@ -6,11 +6,11 @@
 
 #include "natives.h"
 
-bool Player::sendMessage(Text text) {
+bool Player::sendMessage(Text text) const {
     return sendMessage(getLocale()->getText(text));
 }
 
-bool Player::sendMessage(const string &message) {
+bool Player::sendMessage(const string &message) const {
     return api_server::native::SendClientMessage(this->id, -1, message.c_str());
 }
 
@@ -19,5 +19,5 @@ bool Player::sendMessageToAll(Text text) {
 }
 
 bool Player::sendMessageToAll(const string &message) {
-    return api_server::native::SendClientMessageToAll(-1, "");
+    return api_server::native::SendClientMessageToAll(-1, message.c_str());
 }

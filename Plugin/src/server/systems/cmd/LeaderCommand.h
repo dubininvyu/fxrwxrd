@@ -11,9 +11,9 @@ private:
 protected:
     static mapCommands_type commands;
 
-    LeaderCommand(Player& player, const string& params);
+    LeaderCommand(Player* player, const string& params);
 public:
-    static Command* getCommand(Player& player, const string& command, const string& params);
+    static Command* getCommand(Player* player, const string& command, const string& params);
 
     virtual bool execute() = 0;
 };

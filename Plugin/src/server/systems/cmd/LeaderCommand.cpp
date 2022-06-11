@@ -8,10 +8,10 @@ LeaderCommand::mapCommands_type LeaderCommand::commands = {
 
 };
 
-LeaderCommand::LeaderCommand(Player& player, const string& params) : Command(player, params) {
+LeaderCommand::LeaderCommand(Player* player, const string& params) : Command(player, params) {
 
 }
 
-Command* LeaderCommand::getCommand(Player& player, const string& command, const string& params) {
+Command* LeaderCommand::getCommand(Player* player, const string& command, const string& params) {
     return commands[command](player, params);
 }

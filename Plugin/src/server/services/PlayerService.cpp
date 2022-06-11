@@ -4,7 +4,7 @@
 
 #include "PlayerService.h"
 
-PlayerService::PlayerService(Player& player) : Service(), player(player) {
+PlayerService::PlayerService(Player* player) : Service(), player(player) {
 
 }
 

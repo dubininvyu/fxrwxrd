@@ -9,7 +9,7 @@
 #include "services.h"
 #include "repositories.h"
 
-AuthorizationDialog::AuthorizationDialog(Player& player) : Dialog(player) {
+AuthorizationDialog::AuthorizationDialog(Player* player, Page page) : Dialog(player), page(page) {
     pageCount = Page::COUNT;
 
     wrongAttemptsCount = 0;
@@ -22,7 +22,7 @@ AuthorizationDialog::~AuthorizationDialog() {
 bool AuthorizationDialog::format() {
     this->dialog = DIALOG_AUTHORIZATION;
 
-    PlayerLocale& locale = *player.getLocale();
+    PlayerLocale& locale = *player->getLocale();
 
     switch (page) {
         case PAGE_PASSWORD:
@@ -46,49 +46,61 @@ bool AuthorizationDialog::format() {
 }
 
 Dialog::Result AuthorizationDialog::responseStart(const unsigned int response, unsigned int listItem, const string& inputText) {
-    if (page == PAGE_PASSWORD) {
-        if (response == BUTTON_RIGHT) {
-            return RESULT_REPEAT;
+    switch (page) {
+        case PAGE_PASSWORD: {
+            if (response == BUTTON_RIGHT) {
+                return RESULT_REPEAT;
+            }
+
+            if (!PlayerPassword::isValid(inputText)) {
+                wrongAttemptsCount++;
+                return RESULT_REPEAT;
+            }
+
+            break;
         }
 
-        if (!PlayerPassword::isValid(inputText)) {
-            wrongAttemptsCount++;
-            return RESULT_REPEAT;
-        }
+        case PAGE_WRONG_PASSWORD: {
+            if (response == BUTTON_RIGHT) {
+                return RESULT_REPEAT;
+            }
 
-        return RESULT_NEXT_PAGE;
+            if (!PlayerPassword::isValid(inputText)) {
+                wrongAttemptsCount++;
+                return RESULT_REPEAT;
+            }
+
+            break;
+        }
     }
 
-    if (page == PAGE_WRONG_PASSWORD) {
-        if (response == BUTTON_RIGHT) {
-            return RESULT_REPEAT;
-        }
-
-        if (!PlayerPassword::isValid(inputText)) {
-            wrongAttemptsCount++;
-            return RESULT_REPEAT;
-        }
-
-        return RESULT_CLOSE;
-    }
-
-    return RESULT_NEXT_PAGE;
+    return RESULT_CLOSE;
 }
 
 Dialog::Result AuthorizationDialog::responseEnd(const unsigned int response, unsigned int listItem, const string& inputText) {
-    PlayerAuthorizationService authorizationService(player);
-    bool result = authorizationService.endAuthorization();
+    switch (page) {
+        case PAGE_PASSWORD: {
+            PlayerAuthenticationService authenticationService(player);
+            unsigned int accountID = authenticationService.getUIDByPassword(inputText);
 
-    if (result) { // it's okay
-        return RESULT_CLOSE;
+            if (!accountID) {
+                wrongAttemptsCount++;
+
+                if (wrongAttemptsCount == MAX_ATTEMPTS_ENTER_PASSWORD) {
+                    player->sendMessage(player->getLocale()->getText(TEXT_ERROR));
+                    return RESULT_CLOSE;
+                }
+
+                return RESULT_REPEAT;
+            }
+
+            player->setUID(accountID);
+            player->getPassword()->setPassword(inputText, false);
+            player->getStateMachineManager()->getPlayerAuthentication()->process_event(player_authentication_sm::Next());
+
+            break;
+        }
     }
 
-    wrongAttemptsCount++;
-
-    if (wrongAttemptsCount == MAX_ATTEMPTS_ENTER_PASSWORD) {
-        player.sendMessage(player.getLocale()->getText(TEXT_ERROR));
-        return RESULT_CLOSE;
-    }
-
-    return RESULT_REPEAT;
+    return RESULT_CLOSE;
 }

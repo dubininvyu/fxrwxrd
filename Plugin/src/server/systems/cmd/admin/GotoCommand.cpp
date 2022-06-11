@@ -4,11 +4,11 @@
 
 #include "GotoCommand.h"
 
-GotoCommand::GotoCommand(Player& player, const string& params) : AdminCommand(player, params) {
+GotoCommand::GotoCommand(Player* player, const string& params) : AdminCommand(player, params) {
 
 }
 
 bool GotoCommand::execute() {
-    player.sendMessage("This command is calling rn :)");
+    player->sendMessage("This command is calling rn :)");
     return false;
 }

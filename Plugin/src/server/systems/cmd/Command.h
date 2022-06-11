@@ -13,12 +13,12 @@ class Command {
 private:
 
 protected:
-    Player& player;
+    Player* player;
     string params;
 
-    typedef std::map<std::string, std::function<Command*(Player& player, const string& params)>> mapCommands_type;
+    typedef std::map<std::string, std::function<Command*(Player* player, const string& params)>> mapCommands_type;
 public:
-    Command(Player& player, const string& params);
+    Command(Player* player, const string& params);
 
     virtual bool execute() = 0;
 };

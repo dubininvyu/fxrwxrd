@@ -7,7 +7,7 @@
 #include "dialogs.h"
 #include "repositories.h"
 
-PlayerRegistrationService::PlayerRegistrationService(Player& player) :
+PlayerRegistrationService::PlayerRegistrationService(Player* player) :
     PlayerService(player), playerRepository(player, Repository::MODE_NOPE) {
 
 }
@@ -16,31 +16,39 @@ PlayerRegistrationService::~PlayerRegistrationService() {
 
 }
 
-bool PlayerRegistrationService::beginRegistration() {
+bool PlayerRegistrationService::beginPasswordRegistration() {
 
     // show registration dialog
-    Dialog* dialog = new RegistrationDialog(player);
-    return player.getDialog()->showDialog(dialog);
+    Dialog* dialog = new RegistrationDialog(player, RegistrationDialog::PAGE_PASSWORD);
+    return player->getDialogManager()->showDialog(dialog);
 }
 
-bool PlayerRegistrationService::endRegistration(const string& password, PersonSex::Sex sex) {
+bool PlayerRegistrationService::beginSexRegistration() {
+
+    // show registration dialog
+    Dialog* dialog = new RegistrationDialog(player, RegistrationDialog::PAGE_SEX);
+    return player->getDialogManager()->showDialog(dialog);
+}
+
+bool PlayerRegistrationService::endRegistration() {
+
+    string password = player->getPassword()->getPassword();
+    PersonSex::Sex sex = player->getSex()->getSex();
 
     // player data
     unsigned int accountID = playerRepository.createAccount(password, sex);
 
     if (!accountID) {
-        player.getService()->getAuthenticationService()->end(PlayerAuthenticationService::ERROR_UNKNOWN);
         return false;
     }
 
-    player.setUID(accountID);
+    player->setUID(accountID);
 
     // position
     PlayerPositionRepository positionRepository(player);
     unsigned int insertedID = positionRepository.createPosition();
 
     if (!insertedID) {
-        player.getService()->getAuthenticationService()->end(PlayerAuthenticationService::ERROR_UNKNOWN);
         return false;
     }
 

@@ -43,7 +43,7 @@ public:
 
 private:
 protected:
-    Player& player;
+    Player* player;
 
     DialogID dialog;
     Style style;
@@ -56,8 +56,8 @@ protected:
     unsigned int page;
     unsigned int pageCount;
 public:
-    Dialog(Player& player);
-    Dialog(Player& player, const string& caption, const string& info, const string& button1, const string& button2);
+    Dialog(Player* player);
+    Dialog(Player* player, const string& caption, const string& info, const string& button1, const string& button2);
     virtual ~Dialog();
 
     virtual bool format();

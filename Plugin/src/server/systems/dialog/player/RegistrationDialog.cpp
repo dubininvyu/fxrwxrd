@@ -11,7 +11,7 @@
 
 #include <string>
 
-RegistrationDialog::RegistrationDialog(Player& player) : Dialog(player) {
+RegistrationDialog::RegistrationDialog(Player* player, Page page) : Dialog(player), page(page) {
     pageCount = Page::COUNT;
 }
 
@@ -22,7 +22,7 @@ RegistrationDialog::~RegistrationDialog() {
 bool RegistrationDialog::format() {
     this->dialog = DIALOG_REGISTRATION;
 
-    PlayerLocale& locale = *player.getLocale();
+    PlayerLocale& locale = *player->getLocale();
 
     switch (page) {
         case PAGE_PASSWORD:
@@ -46,40 +46,41 @@ bool RegistrationDialog::format() {
 }
 
 Dialog::Result RegistrationDialog::responseStart(const unsigned int response, unsigned int listItem, const string& inputText) {
-    Result result = RESULT_NEXT_PAGE;
+    switch (page) {
+        case PAGE_PASSWORD: {
+            if (response == BUTTON_RIGHT) {
+                return RESULT_REPEAT;
+            }
 
-    if (page == PAGE_PASSWORD) {
-        if (response == BUTTON_RIGHT) {
-            return RESULT_REPEAT;
+            if (!PlayerPassword::isValid(inputText)) {
+                return RESULT_REPEAT;
+            }
+
+            break;
         }
 
-        if (!PlayerPassword::isValid(inputText)) {
-            return RESULT_REPEAT;
+        case PAGE_SEX: {
+            break;
         }
-
-        password = inputText;
     }
 
-    if (page == PAGE_SEX) {
-        sex = PersonSex::Sex(response);
-    }
-
-    return result;
+    return RESULT_CLOSE;
 }
 
 Dialog::Result RegistrationDialog::responseEnd(const unsigned int response, unsigned int listItem, const string& inputText) {
-    PlayerRegistrationService registrationService(player);
-    bool success = registrationService.endRegistration(password, sex);
+    switch (page) {
+        case PAGE_PASSWORD: {
+            player->getPassword()->setPassword(inputText, false);
+            player->getStateMachineManager()->getPlayerAuthentication()->process_event(player_authentication_sm::Next());
+            break;
+        }
 
-    if (success) {
-        PlayerAuthenticationService authenticationService(player);
-        authenticationService.beginPlayerAuthentication();
-
-        return RESULT_CLOSE;
+        case PAGE_SEX: {
+            player->getSex()->setSex(PersonSex::Sex(response));
+            player->getStateMachineManager()->getPlayerAuthentication()->process_event(player_authentication_sm::Next());
+            break;
+        }
     }
-
-    // the authorization process failed
-    player.sendMessage(player.getLocale()->getText(TEXT_ERROR));
 
     return RESULT_CLOSE;
 }

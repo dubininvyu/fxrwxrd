@@ -8,7 +8,7 @@
 #include "services.h"
 #include "repositories.h"
 
-PlayerAuthorizationService::PlayerAuthorizationService(Player& player) :
+PlayerAuthorizationService::PlayerAuthorizationService(Player* player) :
     PlayerService(player), playerRepository(player, Repository::MODE_NOPE) {
 }
 
@@ -16,11 +16,11 @@ PlayerAuthorizationService::~PlayerAuthorizationService() {
 
 }
 
-bool PlayerAuthorizationService::beginAuthorization() {
+bool PlayerAuthorizationService::beginPasswordAuthorization() {
 
     // show authorization dialog
-    Dialog* dialog = new AuthorizationDialog(player);
-    return player.getDialog()->showDialog(dialog);
+    Dialog* dialog = new AuthorizationDialog(player, AuthorizationDialog::PAGE_PASSWORD);
+    return player->getDialogManager()->showDialog(dialog);
 }
 
 bool PlayerAuthorizationService::endAuthorization() {
@@ -30,7 +30,6 @@ bool PlayerAuthorizationService::endAuthorization() {
     result = playerRepository.loadAccount();
 
     if (!result) {
-        player.getService()->getAuthenticationService()->end(PlayerAuthenticationService::ERROR_UNKNOWN);
         return false;
     }
 
@@ -39,20 +38,14 @@ bool PlayerAuthorizationService::endAuthorization() {
     result = positionRepository.loadPosition();
 
     if (!result) {
-        player.getService()->getAuthenticationService()->end(PlayerAuthenticationService::ERROR_UNKNOWN);
         return false;
     }
 
-    // set authorization status
-    player.setAuthorized(true);
-
     // setup spawn info
-    PersonSpawn* spawn = player.getSpawn();
-    spawn->getSkin().setSkin(player.getSkin()->getSkin());
+    PersonSpawn* spawn = player->getSpawn();
+    spawn->getSkin().setSkin(player->getSkin()->getSkin());
     spawn->getTeam().setTeam(PersonTeam::TEAM_NO);
     spawn->setSpawn(); // confirm changes
-
-    player.getService()->getAuthenticationService()->endPlayerAuthorization();
 
     return true;
 }

@@ -13,9 +13,7 @@ using namespace std;
 class Player;
 
 class AuthorizationDialog : public Dialog {
-private:
-    const unsigned int MAX_ATTEMPTS_ENTER_PASSWORD = 3;
-
+public:
     enum Page {
         PAGE_PASSWORD = 0,
         COUNT,
@@ -23,10 +21,15 @@ private:
         /* service dialogs */
         PAGE_WRONG_PASSWORD,
     };
+private:
+    const unsigned int MAX_ATTEMPTS_ENTER_PASSWORD = 3;
+
 protected:
     unsigned int wrongAttemptsCount;
+    Page page;
+
 public:
-    AuthorizationDialog(Player& player);
+    AuthorizationDialog(Player* player, Page page);
     ~AuthorizationDialog();
 
     virtual bool format();

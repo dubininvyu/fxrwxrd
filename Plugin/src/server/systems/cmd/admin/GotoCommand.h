@@ -10,7 +10,7 @@ class GotoCommand : public AdminCommand {
 private:
 protected:
 public:
-    GotoCommand(Player& player, const string& params);
+    GotoCommand(Player* player, const string& params);
 
     virtual bool execute();
 };

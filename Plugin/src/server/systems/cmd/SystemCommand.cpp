@@ -8,11 +8,11 @@ SystemCommand::mapCommands_type SystemCommand::commands = {
 
 };
 
-SystemCommand::SystemCommand(Player& player, const string& params) : Command(player, params) {
+SystemCommand::SystemCommand(Player* player, const string& params) : Command(player, params) {
 
 }
 
-Command* SystemCommand::getCommand(Player& player, const string& command, const string& params) {
+Command* SystemCommand::getCommand(Player* player, const string& command, const string& params) {
     if (!commands.count(command)) {
         return nullptr;
     }

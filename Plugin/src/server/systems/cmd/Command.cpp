@@ -4,6 +4,6 @@
 
 #include "Command.h"
 
-Command::Command(Player& player, const string& params) : player(player), params(params) {
+Command::Command(Player* player, const string& params) : player(player), params(params) {
 
 }

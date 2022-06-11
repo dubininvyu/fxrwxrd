@@ -4,14 +4,10 @@
 
 
 #include "Player.h"
-#include "ServiceManager.h"
 
 using namespace std;
 
-const unsigned int Player::MAX_LENGTH_IP = 16;
 const unsigned int Player::MAX_LENGTH_SERIAL = 40;
-const unsigned int Player::MIN_LENGTH_PASSWORD = 6;
-const unsigned int Player::MAX_LENGTH_PASSWORD = 128;
 
 Player* Player::players[MAX_COUNT] = {nullptr};
 
@@ -28,8 +24,8 @@ Player::Player(unsigned int playerID) : Person(playerID, true) {
     password = new PlayerPassword(this);
 
     // managers
-    dialog = new DialogManager(this);
-    service = new ServiceManager(this);
+    dialogManager = new DialogManager(this);
+    stateMachineManager = new StateMachineManager(this);
 
     // systems
     locale = &PlayerLocale::getLocale(LANGUAGE_DEFAULT);
@@ -41,8 +37,8 @@ Player::~Player() {
     delete password;
 
     // managers
-    delete dialog;
-    delete service;
+    delete dialogManager;
+    delete stateMachineManager;
 
     // systems
 }
@@ -132,17 +128,17 @@ void Player::setLocale(Language language) {
     this->locale = &PlayerLocale::getLocale(language);
 }
 
-PlayerLocale* Player::getLocale() {
+PlayerLocale* Player::getLocale() const {
     return locale;
 }
 
 /* dynamic */
-DialogManager* Player::getDialog() {
-    return dialog;
+DialogManager* Player::getDialogManager() {
+    return dialogManager;
 }
 
-ServiceManager* Player::getService() {
-    return service;
+StateMachineManager* Player::getStateMachineManager() {
+    return stateMachineManager;
 }
 
 /* others */

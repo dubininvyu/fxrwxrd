@@ -8,11 +8,11 @@ PlayerCommand::mapCommands_type PlayerCommand::commands = {
 
 };
 
-PlayerCommand::PlayerCommand(Player& player, const string& params) : Command(player, params) {
+PlayerCommand::PlayerCommand(Player* player, const string& params) : Command(player, params) {
 
 }
 
-Command* PlayerCommand::getCommand(Player& player, const string& command, const string& params) {
+Command* PlayerCommand::getCommand(Player* player, const string& command, const string& params) {
     if (!commands.count(command)) {
         return nullptr;
     }

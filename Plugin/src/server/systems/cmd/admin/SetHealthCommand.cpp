@@ -10,7 +10,7 @@
 using namespace std;
 using namespace boost::program_options;
 
-SetHealthCommand::SetHealthCommand(Player& player, const string& params) : AdminCommand(player, params) {
+SetHealthCommand::SetHealthCommand(Player* player, const string& params) : AdminCommand(player, params) {
     try {
         split();
     }
@@ -30,7 +30,7 @@ bool SetHealthCommand::execute() {
     }
 
     if (isHealth && !isPlayerID) {
-        return setPlayerHealth(&player, health);
+        return setPlayerHealth(player, health);
     }
 
     Player* target = Player::get(playerID);
@@ -69,7 +69,7 @@ bool SetHealthCommand::prepare() {
 }
 
 bool SetHealthCommand::fail() {
-    player.sendMessage("Usage: /sethp --h [health], --t [target]");
+    player->sendMessage("Usage: /sethealth -h [health], -t [target]");
     return false;
 }
 

@@ -13,7 +13,7 @@ private:
 protected:
     PlayerSessionRepository sessionRepository;
 public:
-    PlayerSessionService(Player& player);
+    PlayerSessionService(Player* player);
     virtual ~PlayerSessionService();
 
     void createConnectSession();
