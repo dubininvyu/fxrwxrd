@@ -4,7 +4,7 @@
 
 #include "VehicleStreamInHandler.h"
 
-VehicleStreamInHandler::VehicleStreamInHandler(Vehicle& vehicle, Player* player) : VehicleEventHandler(vehicle), player(player) {
+VehicleStreamInHandler::VehicleStreamInHandler(Vehicle* vehicle, Player* player) : VehicleEventHandler(vehicle), player(player) {
 
 }
 

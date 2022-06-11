@@ -4,7 +4,7 @@
 
 #include "VehicleDeathHandler.h"
 
-VehicleDeathHandler::VehicleDeathHandler(Vehicle& vehicle, Player* killer) : VehicleEventHandler(vehicle), killer(killer) {
+VehicleDeathHandler::VehicleDeathHandler(Vehicle* vehicle, Player* killer) : VehicleEventHandler(vehicle), killer(killer) {
 
 }
 

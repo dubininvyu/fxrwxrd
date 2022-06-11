@@ -13,7 +13,7 @@ private:
 protected:
     Player* damager;
 public:
-    VehicleDamageHandler(Vehicle& vehicle, Player* damager = nullptr);
+    VehicleDamageHandler(Vehicle* vehicle, Player* damager = nullptr);
     virtual ~VehicleDamageHandler();
 
     virtual bool execute();

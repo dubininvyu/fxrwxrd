@@ -26,3 +26,4 @@
 #include "ServerConfigService.h"
 
 /* vehicle */
+#include "VehicleDataService.h"

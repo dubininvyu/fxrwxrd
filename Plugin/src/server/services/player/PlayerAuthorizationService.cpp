@@ -45,7 +45,7 @@ bool PlayerAuthorizationService::endAuthorization() {
     PersonSpawn* spawn = player->getSpawn();
     spawn->getSkin().setSkin(player->getSkin()->getSkin());
     spawn->getTeam().setTeam(PersonTeam::TEAM_NO);
-    spawn->setSpawn(); // confirm changes
+    spawn->setSpawnInfo(); // confirm changes
 
     return true;
 }

@@ -15,7 +15,7 @@ bool PersonSpawn::spawn() {
     return api_server::native::SpawnPlayer(person->getID());
 }
 
-bool PersonSpawn::setSpawn() {
+bool PersonSpawn::setSpawnInfo() {
     unsigned int id = person->getID();
     unsigned int teamID = team.getTeam();
     unsigned int skinID = skin.getSkin();

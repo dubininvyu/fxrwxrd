@@ -18,3 +18,6 @@
 /* server */
 #include "LocaleRepository.h"
 #include "ServerRconConfigRepository.h"
+
+/* vehicle */
+#include "VehicleRepository.h"

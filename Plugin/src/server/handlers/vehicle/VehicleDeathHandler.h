@@ -13,7 +13,7 @@ private:
 protected:
     Player* killer;
 public:
-    VehicleDeathHandler(Vehicle& vehicle, Player* killer = nullptr);
+    VehicleDeathHandler(Vehicle* vehicle, Player* killer = nullptr);
     virtual ~VehicleDeathHandler();
 
     virtual bool execute();

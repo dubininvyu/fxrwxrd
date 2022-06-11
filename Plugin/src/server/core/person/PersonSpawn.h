@@ -23,7 +23,7 @@ public:
     PersonSpawn(Person* person);
 
     bool spawn();
-    bool setSpawn();
+    bool setSpawnInfo();
 
     PersonSkin& getSkin();
     PersonTeam& getTeam();

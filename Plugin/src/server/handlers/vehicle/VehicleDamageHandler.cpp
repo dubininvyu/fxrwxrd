@@ -4,7 +4,7 @@
 
 #include "VehicleDamageHandler.h"
 
-VehicleDamageHandler::VehicleDamageHandler(Vehicle& vehicle, Player* damager) : VehicleEventHandler(vehicle), damager(damager) {
+VehicleDamageHandler::VehicleDamageHandler(Vehicle* vehicle, Player* damager) : VehicleEventHandler(vehicle), damager(damager) {
 
 }
 

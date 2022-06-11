@@ -4,7 +4,7 @@
 
 #include "VehicleSpawnHandler.h"
 
-VehicleSpawnHandler::VehicleSpawnHandler(Vehicle& vehicle) : VehicleEventHandler(vehicle) {
+VehicleSpawnHandler::VehicleSpawnHandler(Vehicle* vehicle) : VehicleEventHandler(vehicle) {
 
 }
 

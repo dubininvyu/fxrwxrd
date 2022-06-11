@@ -14,7 +14,7 @@ protected:
     Player* driver;
     bool newState;
 public:
-    VehicleSirenStateChangeHandler(Vehicle& vehicle, Player* driver, bool newState);
+    VehicleSirenStateChangeHandler(Vehicle* vehicle, Player* driver, bool newState);
     virtual ~VehicleSirenStateChangeHandler();
 
     virtual bool execute();

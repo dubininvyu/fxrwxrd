@@ -13,7 +13,7 @@ private:
 protected:
     Player* player;
 public:
-    VehicleStreamInHandler(Vehicle& vehicle, Player* player = nullptr);
+    VehicleStreamInHandler(Vehicle* vehicle, Player* player = nullptr);
     virtual ~VehicleStreamInHandler();
 
     virtual bool execute();

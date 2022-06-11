@@ -4,7 +4,7 @@
 
 #include "VehicleSirenStateChangeHandler.h"
 
-VehicleSirenStateChangeHandler::VehicleSirenStateChangeHandler(Vehicle& vehicle, Player* driver, bool newState) :
+VehicleSirenStateChangeHandler::VehicleSirenStateChangeHandler(Vehicle* vehicle, Player* driver, bool newState) :
     VehicleEventHandler(vehicle), driver(driver), newState(newState) {
 
 }

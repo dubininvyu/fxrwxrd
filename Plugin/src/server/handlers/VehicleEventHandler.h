@@ -10,8 +10,8 @@
 class VehicleEventHandler : public EventHandler {
 private:
 protected:
-    Vehicle& vehicle;
-    VehicleEventHandler(Vehicle& vehicle);
+    Vehicle* vehicle;
+    VehicleEventHandler(Vehicle* vehicle);
 public:
     virtual ~VehicleEventHandler() = 0;
 };

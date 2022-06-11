@@ -9,10 +9,10 @@
 class VehicleParamsUpdateHandler : public VehicleEventHandler {
 private:
 protected:
-    Vehicle::Params param;
+    VehicleParam::Param param;
     bool newState;
 public:
-    VehicleParamsUpdateHandler(Vehicle& vehicle, Vehicle::Params param, bool newState);
+    VehicleParamsUpdateHandler(Vehicle* vehicle, VehicleParam::Param param, bool newState);
     virtual ~VehicleParamsUpdateHandler();
 
     virtual bool execute();

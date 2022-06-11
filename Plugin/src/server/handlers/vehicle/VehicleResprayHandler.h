@@ -11,7 +11,7 @@ private:
 protected:
     int color[2];
 public:
-    VehicleResprayHandler(Vehicle& vehicle, int color1, int color2);
+    VehicleResprayHandler(Vehicle* vehicle, int color1, int color2);
     virtual ~VehicleResprayHandler();
 
     virtual bool execute();

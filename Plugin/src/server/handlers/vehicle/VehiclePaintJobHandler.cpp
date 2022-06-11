@@ -4,7 +4,7 @@
 
 #include "VehiclePaintJobHandler.h"
 
-VehiclePaintJobHandler::VehiclePaintJobHandler(Vehicle& vehicle, int paintJob) : VehicleEventHandler(vehicle), paintJob(paintJob) {
+VehiclePaintJobHandler::VehiclePaintJobHandler(Vehicle* vehicle, int paintJob) : VehicleEventHandler(vehicle), paintJob(paintJob) {
 
 }
 

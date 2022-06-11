@@ -4,7 +4,7 @@
 
 #include "VehicleParamsUpdateHandler.h"
 
-VehicleParamsUpdateHandler::VehicleParamsUpdateHandler(Vehicle& vehicle, Vehicle::Params param, bool newState) :
+VehicleParamsUpdateHandler::VehicleParamsUpdateHandler(Vehicle* vehicle, VehicleParam::Param param, bool newState) :
     VehicleEventHandler(vehicle), param(param), newState(newState) {
 
 }
@@ -15,35 +15,35 @@ VehicleParamsUpdateHandler::~VehicleParamsUpdateHandler() {
 
 bool VehicleParamsUpdateHandler::execute() {
 
-    if (param == Vehicle::PARAM_ENGINE) {
+    if (param == VehicleParam::Param::PARAM_ENGINE) {
         return onEngineStatusUpdate(newState);
     }
 
-    if (param == Vehicle::PARAM_LIGHTS) {
+    if (param == VehicleParam::Param::PARAM_LIGHTS) {
         return onLightsStatusUpdate(newState);
     }
 
-    if (param == Vehicle::PARAM_ALARM) {
+    if (param == VehicleParam::Param::PARAM_ALARM) {
         return onAlarmStatusUpdate(newState);
     }
 
-    if (param == Vehicle::PARAM_DOORS) {
+    if (param == VehicleParam::Param::PARAM_DOORS) {
         return onDoorsStatusUpdate(newState);
     }
 
-    if (param == Vehicle::PARAM_BONNET) {
+    if (param == VehicleParam::Param::PARAM_BONNET) {
         return onBonnetStatusUpdate(newState);
     }
 
-    if (param == Vehicle::PARAM_BOOT) {
+    if (param == VehicleParam::Param::PARAM_BOOT) {
         return onBootStatusUpdate(newState);
     }
 
-    if (param == Vehicle::PARAM_OBJECTIVE) {
+    if (param == VehicleParam::Param::PARAM_OBJECTIVE) {
         return onObjectiveStatusUpdate(newState);
     }
 
-    if (param == Vehicle::PARAM_SIREN) {
+    if (param == VehicleParam::Param::PARAM_SIREN) {
         return onSirenStatusUpdate(newState);
     }
 

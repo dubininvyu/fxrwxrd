@@ -21,7 +21,7 @@ bool PlayerRequestClassHandler::execute() {
     player->setSpawned(false);
 
     if (player->isAuthorized()) { // player has clicked F4 and had died
-        player->getSpawn()->setSpawn();
+        player->getSpawn()->setSpawnInfo();
         return player->getSpawn()->spawn();
     }
 

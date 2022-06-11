@@ -21,3 +21,14 @@
 /* server */
 #include "ServerGameModeInitHandler.h"
 #include "ServerGameModeExitHandler.h"
+
+/* vehicle */
+#include "VehicleDamageHandler.h"
+#include "VehicleDeathHandler.h"
+#include "VehiclePaintJobHandler.h"
+#include "VehicleParamsUpdateHandler.h"
+#include "VehicleResprayHandler.h"
+#include "VehicleSirenStateChangeHandler.h"
+#include "VehicleSpawnHandler.h"
+#include "VehicleStreamInHandler.h"
+#include "VehicleStreamOutHandler.h"

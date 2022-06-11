@@ -11,7 +11,7 @@ private:
 protected:
     int paintJob;
 public:
-    VehiclePaintJobHandler(Vehicle& vehicle, int paintJob);
+    VehiclePaintJobHandler(Vehicle* vehicle, int paintJob);
     virtual ~VehiclePaintJobHandler();
 
     virtual bool execute();

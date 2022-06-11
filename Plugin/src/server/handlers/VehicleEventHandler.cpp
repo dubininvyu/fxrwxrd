@@ -4,7 +4,7 @@
 
 #include "VehicleEventHandler.h"
 
-VehicleEventHandler::VehicleEventHandler(Vehicle& vehicle) : EventHandler(), vehicle(vehicle) {
+VehicleEventHandler::VehicleEventHandler(Vehicle* vehicle) : EventHandler(), vehicle(vehicle) {
 
 }
 
