@@ -23,20 +23,14 @@ PlayerRepository::~PlayerRepository() {
 
 }
 
+/* main */
+
 bool PlayerRepository::preload() {
     return true;
 }
 
-bool PlayerRepository::isRegistered() const {
-    return (getUID() > 0);
-}
-
-bool PlayerRepository::isRegisteredByPassword(const string& password) const {
-    return (getUIDByPassword(password) > 0);
-}
-
-bool PlayerRepository::loadAccount() {
-    format fmt = format("SELECT * FROM `accounts` WHERE `id` = '%d' LIMIT 1")
+unsigned int PlayerRepository::load() {
+    format fmt = format("SELECT * FROM `accounts` a LEFT JOIN accounts_positions ap ON a.`id` = `ap`.`account` WHERE a.`id` = '%d' LIMIT 1")
                  % player->getUID();
 
     MySQLConnector connector(MainDatabase::getInstance());
@@ -52,11 +46,15 @@ bool PlayerRepository::loadAccount() {
     }
 
     enum {
-        ID, NAME, PASSWORD, REGISTRATION_DATE, LAST_ONLINE_DATE, LOCALE, SEX, SKIN, LEVEL, HEALTH, ARMOUR
+        // accounts
+        ID, NAME, PASSWORD, REGISTRATION_DATE, LAST_ONLINE_DATE, LOCALE, SEX, SKIN, LEVEL, HEALTH, ARMOUR,
+        // accounts_positions
+        ID_, ACCOUNT, TIME, INTERIOR, WORLD, COORD_X, COORD_Y, COORD_Z, COORD_A
     };
 
     MYSQL_ROW row = result.fetchRow();
 
+    // accounts
     PersonSex::Sex sex = PersonSex::Sex(atoi(row[SEX]));
     player->getSex()->setSex(sex);
 
@@ -71,12 +69,34 @@ bool PlayerRepository::loadAccount() {
 
     PersonArmour* armour = player->getArmour();
     armour->setArmour(stof(row[ARMOUR]));
-    return true;
+
+    // accounts_positions
+    vec4d pos(
+            stof(row[COORD_X]),
+            stof(row[COORD_X]),
+            stof(row[COORD_X]),
+            stof(row[COORD_X])
+    );
+
+    PersonSpawn* spawn = player->getSpawn();
+    spawn->getPosition().setPosition(pos);
+    spawn->getPosition().setWorld(stof(row[WORLD]));
+    spawn->getPosition().setInterior(stof(row[INTERIOR]));
+
+    return atoi(row[ID]);
 }
 
-unsigned int PlayerRepository::createAccount(const string& password, PersonSex::Sex sex) {
+unsigned int PlayerRepository::block() {
+    return 0;
+}
+
+unsigned int PlayerRepository::update() {
+    return 0;
+}
+
+unsigned int PlayerRepository::create() {
     format fmt = format("INSERT INTO `accounts` (`name`, `password`, `sex`) VALUES ('%s', MD5('%s'), '%d')")
-            % player->getName()->getName() % password % sex;
+                 % player->getName()->getName() % player->getPassword()->getPassword() % player->getSex()->getSex();
 
     MySQLConnector connector(MainDatabase::getInstance());
     connector.query(fmt.str());
@@ -84,10 +104,21 @@ unsigned int PlayerRepository::createAccount(const string& password, PersonSex::
     return connector.getInsertedID();
 }
 
+/* is ... */
+bool PlayerRepository::isRegistered() const {
+    return (getUID() > 0);
+}
+
+bool PlayerRepository::isRegisteredByPassword(const string& password) const {
+    return (getUIDByPassword(password) > 0);
+}
+
+
+/* get uid */
 unsigned int PlayerRepository::getUID() const {
     format fmt = format(
             "SELECT `id` FROM `accounts` WHERE `name` = '%s' LIMIT 1")
-            % player->getName()->getName();
+                 % player->getName()->getName();
 
     MySQLConnector connector(MainDatabase::getInstance());
     connector.query(fmt.str());
@@ -128,6 +159,8 @@ unsigned int PlayerRepository::getUIDByPassword(const string& password) const {
     MYSQL_ROW row = result.fetchRow();
     return atoi(row[ID]);
 }
+
+/* others */
 
 Language PlayerRepository::getLanguage() const {
     if (!player->getUID()) {

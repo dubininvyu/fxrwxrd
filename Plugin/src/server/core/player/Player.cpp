@@ -22,6 +22,7 @@ Player::Player(unsigned int playerID) : Person(playerID, true) {
     // fields
     admin = new Admin(this);
     password = new PlayerPassword(this);
+    license = new PlayerLicense(this);
 
     // managers
     dialogManager = new DialogManager(this);
@@ -35,6 +36,7 @@ Player::~Player() {
     // fields
     delete admin;
     delete password;
+    delete license;
 
     // managers
     delete dialogManager;
@@ -130,6 +132,10 @@ void Player::setLocale(Language language) {
 
 PlayerLocale* Player::getLocale() const {
     return locale;
+}
+
+PlayerLicense* Player::getLicense() {
+    return license;
 }
 
 /* dynamic */

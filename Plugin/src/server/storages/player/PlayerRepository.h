@@ -6,12 +6,13 @@
 
 #include "PersonSex.h"
 #include "MySQLRepository.h"
+#include "RepositoryInterface.h"
 #include "PlayerDisconnectHandler.h"
 #include "languages.h"
 
 class Player;
 
-class PlayerRepository : public MySQLRepository {
+class PlayerRepository : public MySQLRepository, virtual public RepositoryInterface {
 private:
 protected:
     Player* player;
@@ -22,11 +23,13 @@ public:
 
     virtual bool preload();
 
+    virtual unsigned int load();
+    virtual unsigned int block();
+    virtual unsigned int update();
+    virtual unsigned int create();
+
     bool isRegistered() const;
     bool isRegisteredByPassword(const string& password) const;
-
-    bool loadAccount();
-    unsigned int createAccount(const string& password, PersonSex::Sex sex);
 
     unsigned int getUID() const;
     unsigned int getUIDByPassword(const string& password) const;

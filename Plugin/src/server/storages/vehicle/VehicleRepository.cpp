@@ -5,6 +5,7 @@
 #include "VehicleRepository.h"
 #include "Vehicle.h"
 #include "MainDatabase.h"
+#include "ErrorLog.h"
 #include "geometry.h"
 
 #include "boost/format.hpp"
@@ -30,7 +31,7 @@ bool VehicleRepository::preload() {
     return true;
 }
 
-unsigned int VehicleRepository::loadVehicles() {
+unsigned int VehicleRepository::load() {
     MySQLConnector connector(MainDatabase::getInstance());
     connector.query("SELECT * FROM `vehicles` AS v LEFT JOIN `vehicles_positions` AS vp ON v.`id` = vp.`vehicle`");
 
@@ -45,7 +46,10 @@ unsigned int VehicleRepository::loadVehicles() {
     }
 
     enum {
-        ID, MODEL, COLOR, SIREN, ID_, VEHICLE, COORD_X, COORD_Y, COORD_Z, COORD_A
+        // vehicles
+        ID, MODEL, COLOR, SIREN,
+        // vehicles_positions
+        ID_, VEHICLE, COORD_X, COORD_Y, COORD_Z, COORD_A,
     };
 
     for (int i = 0; i < rows; i++) {
@@ -64,8 +68,27 @@ unsigned int VehicleRepository::loadVehicles() {
         json json = json::parse(row[COLOR]);
         int colors[2] {json["color"]["main"][0], json["color"]["main"][1]};
 
-        Vehicle::create(model, position, colors, -1, siren);
+        Vehicle* vehicle = Vehicle::create(model, position, colors, -1, siren);
+
+        if (!vehicle) {
+            ErrorLog(__FILE__, __LINE__, "Error loading vehicles").print();
+            break;
+        }
+
+        // components, damages, ...
     }
 
     return rows;
+}
+
+unsigned int VehicleRepository::block() {
+    return 0;
+}
+
+unsigned int VehicleRepository::update() {
+    return 0;
+}
+
+unsigned int VehicleRepository::create() {
+    return 0;
 }

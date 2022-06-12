@@ -20,17 +20,20 @@ PlayerSessionRepository::~PlayerSessionRepository() {
 
 }
 
-unsigned long long PlayerSessionRepository::createSession(const int online, const string& ip) {
-    format fmt = format("INSERT INTO `accounts_sessions` (`account`, `online`, `ip`) VALUES ('%d', '%d', '%s')")
-                 % player->getUID() % player->getID() % player->getIP()->getIP();
+/* main */
+bool PlayerSessionRepository::preload() {
 
-    MySQLConnector connector(MainDatabase::getInstance());
-    connector.query(fmt.str());
-
-    return connector.getInsertedID();
 }
 
-bool PlayerSessionRepository::updateSession(const PlayerDisconnectHandler::Reason reason) {
+unsigned int PlayerSessionRepository::load() {
+    return 0;
+}
+
+unsigned int PlayerSessionRepository::block() {
+    return 0;
+}
+
+unsigned int PlayerSessionRepository::update(const PlayerDisconnectHandler::Reason reason) {
     format fmt = format("UPDATE `accounts_sessions` SET `online` = '-1', `disconnect_reason` = '%d' WHERE `account` = '%d' AND `online` != -1")
                  % reason % player->getUID();
 
@@ -38,4 +41,14 @@ bool PlayerSessionRepository::updateSession(const PlayerDisconnectHandler::Reaso
     bool result = connector.query(fmt.str());
 
     return !result;
+}
+
+unsigned int PlayerSessionRepository::create() {
+    format fmt = format("INSERT INTO `accounts_sessions` (`account`, `online`, `ip`) VALUES ('%d', '%d', '%s')")
+                 % player->getUID() % player->getID() % player->getIP()->getIP();
+
+    MySQLConnector connector(MainDatabase::getInstance());
+    connector.query(fmt.str());
+
+    return connector.getInsertedID();
 }

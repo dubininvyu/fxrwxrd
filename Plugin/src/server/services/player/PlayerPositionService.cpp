@@ -16,5 +16,5 @@ PlayerPositionService::~PlayerPositionService() {
 
 void PlayerPositionService::savePosition() {
     player->getPosition()->syncPosition(); // synchronize player position
-    positionRepository.savePosition(player->getPosition());
+    positionRepository.update();
 }

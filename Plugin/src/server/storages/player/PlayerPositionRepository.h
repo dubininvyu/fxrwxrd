@@ -6,17 +6,20 @@
 
 #include "PlayerRepository.h"
 #include "PersonPosition.h"
+#include "RepositoryInterface.h"
 
-class PlayerPositionRepository : public PlayerRepository {
+class PlayerPositionRepository : public PlayerRepository, virtual public RepositoryInterface {
 private:
 protected:
 public:
     PlayerPositionRepository(Player* player);
     virtual ~PlayerPositionRepository();
 
-    unsigned int createPosition();
-
-    bool loadPosition();
-    bool savePosition(PersonPosition* position);
+    /* main */
+    virtual bool preload();
+    virtual unsigned int save();
+    virtual unsigned int load();
+    virtual unsigned int block();
+    virtual unsigned int create();
 };
 

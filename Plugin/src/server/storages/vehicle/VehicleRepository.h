@@ -5,10 +5,11 @@
 #pragma once
 
 #include "MySQLRepository.h"
+#include "RepositoryInterface.h"
 
 class Vehicle;
 
-class VehicleRepository : public MySQLRepository {
+class VehicleRepository : public MySQLRepository, public virtual RepositoryInterface {
 private:
 protected:
     Vehicle* vehicle;
@@ -19,7 +20,11 @@ public:
 
     virtual bool preload();
 
-    static unsigned int loadVehicles();
-    //unsigned int createAccount(const string& password, PersonSex::Sex sex);
+    static unsigned int load();
+    virtual unsigned int block();
+    virtual unsigned int update();
+    virtual unsigned int create();
+
+    /* others */
 };
 

@@ -27,15 +27,7 @@ bool PlayerAuthorizationService::endAuthorization() {
     bool result;
 
     // player data
-    result = playerRepository.loadAccount();
-
-    if (!result) {
-        return false;
-    }
-
-    // player position
-    PlayerPositionRepository positionRepository(player);
-    result = positionRepository.loadPosition();
+    result = playerRepository.load();
 
     if (!result) {
         return false;

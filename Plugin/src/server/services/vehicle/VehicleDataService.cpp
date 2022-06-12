@@ -15,5 +15,5 @@ VehicleDataService::~VehicleDataService() {
 }
 
 unsigned int VehicleDataService::loadVehicles() {
-    return VehicleRepository::loadVehicles();
+    return VehicleRepository::load();
 }

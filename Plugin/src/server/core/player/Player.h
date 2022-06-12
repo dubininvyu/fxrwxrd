@@ -10,6 +10,7 @@
 
 #include "PlayerLocale.h"
 #include "PlayerPassword.h"
+#include "PlayerLicense.h"
 
 #include "managers.h"
 
@@ -29,8 +30,8 @@ protected:
     /* main */
     Admin* admin;
     PlayerPassword* password;
-
     PlayerLocale* locale;
+    PlayerLicense* license;
 
     DialogManager* dialogManager;
     StateMachineManager* stateMachineManager;
@@ -61,6 +62,8 @@ public:
 
     void setLocale(Language language);
     PlayerLocale* getLocale() const;
+
+    PlayerLicense* getLicense();
 
     /* managers */
     DialogManager* getDialogManager();

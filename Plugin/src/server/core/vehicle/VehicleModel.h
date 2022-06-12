@@ -4,6 +4,14 @@
 
 #pragma once
 
+#include "Player.h"
+#include "ModelType.h"
+#include "VehicleInfo.h"
+
+#include <string>
+
+using namespace std;
+
 class Vehicle;
 
 class VehicleModel {
@@ -27,10 +35,21 @@ private:
 protected:
     Vehicle* vehicle;
     unsigned int model;
+
+    string name;
+    ModelType* type;
+    VehicleInfo* info;
+    PlayerLicense::License license;
 public:
     VehicleModel(Vehicle* vehicle, unsigned int model);
+    VehicleModel(const unsigned int model, const string& name, const PlayerLicense::License license);
     ~VehicleModel();
 
     static bool isValid(unsigned int model);
     bool isValid() const;
+
+    ModelType* getType();
+
+    void setInfo(VehicleInfo* info);
+    VehicleInfo* getInfo();
 };

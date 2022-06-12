@@ -19,7 +19,33 @@ PlayerPositionRepository::~PlayerPositionRepository() {
 
 }
 
-unsigned int PlayerPositionRepository::createPosition() {
+/* main */
+bool PlayerPositionRepository::preload() {
+    return true;
+}
+
+unsigned int PlayerPositionRepository::save() {
+    PersonPosition* position = player->getPosition();
+    vec4d& coord = position->getPosition();
+
+    format fmt = format("UPDATE `accounts_positions` SET `interior` = '%d', `world` = '%d', `coord_x` = '%f', `coord_y` = '%f', `coord_z` = '%f', `coord_a` = '%f' WHERE `account` = '%d' LIMIT 1")
+                 % position->getInterior() % position->getWorld() % coord.getX() % coord.getY() % coord.getZ() % coord.getA() % player->getUID();
+
+    MySQLConnector connector(MainDatabase::getInstance());
+    bool result = connector.query(fmt.str());
+
+    return !result;
+}
+
+unsigned int PlayerPositionRepository::load() {
+    return 0;
+}
+
+unsigned int PlayerPositionRepository::block() {
+    return 0;
+}
+
+unsigned int PlayerPositionRepository::create() {
     format fmt = format("INSERT INTO `accounts_positions` (`account`) VALUES ('%d')")
                  % player->getUID();
 
@@ -29,50 +55,4 @@ unsigned int PlayerPositionRepository::createPosition() {
     return connector.getInsertedID();
 }
 
-bool PlayerPositionRepository::loadPosition() {
-    format fmt = format("SELECT * FROM `accounts_positions` WHERE `account` = '%d' LIMIT 1")
-                 % player->getUID();
-
-    MySQLConnector connector(MainDatabase::getInstance());
-    connector.query(fmt.str());
-
-    SQLResult result = connector.storeResult();
-    if (!result) {
-        return false;
-    }
-
-    if (!result.getNumRows()) {
-        return false;
-    }
-
-    enum {
-        ID, PLAYER_ID, TIME, INTERIOR, WORLD, COORD_X, COORD_Y, COORD_Z, COORD_A
-    };
-
-    MYSQL_ROW row = result.fetchRow();
-
-    float x = stof(row[COORD_X]);
-    float y = stof(row[COORD_Y]);
-    float z = stof(row[COORD_Z]);
-    float a = stof(row[COORD_A]);
-    vec4d pos(x, y, z, a);
-
-    PersonSpawn* spawn = player->getSpawn();
-    spawn->getPosition().setPosition(pos);
-    spawn->getPosition().setWorld(stof(row[WORLD]));
-    spawn->getPosition().setInterior(stof(row[INTERIOR]));
-
-    return true;
-}
-
-bool PlayerPositionRepository::savePosition(PersonPosition* position) {
-    vec4d& pos = position->getPosition();
-
-    format fmt = format("UPDATE `accounts_positions` SET `interior` = '%d', `world` = '%d', `coord_x` = '%f', `coord_y` = '%f', `coord_z` = '%f', `coord_a` = '%f' WHERE `account` = '%d' LIMIT 1")
-                 % position->getInterior() % position->getWorld() % pos.getX() % pos.getY() % pos.getZ() % pos.getA() % player->getUID();
-
-    MySQLConnector connector(MainDatabase::getInstance());
-    bool result = connector.query(fmt.str());
-
-    return !result;
-}
+/* others */

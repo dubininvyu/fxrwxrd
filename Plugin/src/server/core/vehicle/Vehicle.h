@@ -13,6 +13,8 @@
 #include "VehicleParam.h"
 #include "VehiclePosition.h"
 
+#include "ModelType.h"
+
 #include "geometry.h"
 
 using namespace geometry;

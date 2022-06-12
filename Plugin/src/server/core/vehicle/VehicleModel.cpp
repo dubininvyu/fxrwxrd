@@ -8,6 +8,11 @@ VehicleModel::VehicleModel(Vehicle* vehicle, unsigned int model) : vehicle(vehic
 
 }
 
+VehicleModel::VehicleModel(const unsigned int model, const string& name, const PlayerLicense::License license) :
+    model(model), name(name), license(license) {
+
+}
+
 VehicleModel::~VehicleModel() {
 
 }
@@ -18,4 +23,16 @@ bool VehicleModel::isValid(unsigned int model) {
 
 bool VehicleModel::isValid() const {
     return isValid(model);
+}
+
+ModelType* VehicleModel::getType() {
+    return type;
+}
+
+void VehicleModel::setInfo(VehicleInfo* info) {
+    this->info = info;
+}
+
+VehicleInfo* VehicleModel::getInfo() {
+    return info;
 }

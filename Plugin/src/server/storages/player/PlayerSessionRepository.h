@@ -7,14 +7,20 @@
 #include "PlayerRepository.h"
 #include "PlayerDisconnectHandler.h"
 
-class PlayerSessionRepository : public PlayerRepository {
+class PlayerSessionRepository : public PlayerRepository, virtual public RepositoryInterface {
 private:
 protected:
 public:
     PlayerSessionRepository(Player* player);
     virtual ~PlayerSessionRepository();
 
-    unsigned long long createSession(const int online, const string& ip);
-    bool updateSession(const PlayerDisconnectHandler::Reason reason);
+    /* main */
+    virtual bool preload();
+
+    virtual unsigned int load();
+    virtual unsigned int block();
+    virtual unsigned int update(const PlayerDisconnectHandler::Reason reason);
+    virtual unsigned int create();
+
 };
 

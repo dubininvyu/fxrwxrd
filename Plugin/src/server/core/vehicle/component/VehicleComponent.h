@@ -25,5 +25,10 @@ public:
         VENT_RIGHT,
         VENT_LEFT
     };
+private:
+protected:
+public:
+    VehicleComponent();
+    virtual ~VehicleComponent();
 };
 

@@ -32,11 +32,8 @@ bool PlayerRegistrationService::beginSexRegistration() {
 
 bool PlayerRegistrationService::endRegistration() {
 
-    string password = player->getPassword()->getPassword();
-    PersonSex::Sex sex = player->getSex()->getSex();
-
     // player data
-    unsigned int accountID = playerRepository.createAccount(password, sex);
+    unsigned int accountID = playerRepository.create();
 
     if (!accountID) {
         return false;
@@ -46,7 +43,7 @@ bool PlayerRegistrationService::endRegistration() {
 
     // position
     PlayerPositionRepository positionRepository(player);
-    unsigned int insertedID = positionRepository.createPosition();
+    unsigned int insertedID = positionRepository.create();
 
     if (!insertedID) {
         return false;

@@ -14,9 +14,9 @@ PlayerSessionService::~PlayerSessionService() {
 }
 
 void PlayerSessionService::createConnectSession() {
-    sessionRepository.createSession(player->getUID(), player->getIP()->getIP());
+    sessionRepository.create();
 }
 
 void PlayerSessionService::createDisconnectSession(PlayerDisconnectHandler::Reason reason) {
-    sessionRepository.updateSession(reason);
+    sessionRepository.update(reason);
 }
