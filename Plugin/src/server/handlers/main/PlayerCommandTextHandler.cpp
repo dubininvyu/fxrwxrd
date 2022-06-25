@@ -43,7 +43,7 @@ bool PlayerCommandTextHandler::execute() {
         return cmd->execute();
     }
 
-    player->sendMessage(player->getLocale()->getText(TEXT_UNKNOWN_COMMAND));
+    player->sendMessage(player->getAccount()->getLocale()->getText(TEXT_CMD_UNKNOWN));
 
     return true;
 }

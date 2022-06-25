@@ -9,6 +9,14 @@
 namespace native = api_server::native;
 using namespace geometry;
 
+/*
+ * constructors & destructors
+ */
+
+VehiclePosition::VehiclePosition(const vec4d& position) : vehicle(nullptr), vec4d(position) {
+
+}
+
 VehiclePosition::VehiclePosition(Vehicle* vehicle, const vec4d& position) : vehicle(vehicle), vec4d(position) {
 
 }
@@ -17,7 +25,10 @@ VehiclePosition::~VehiclePosition() {
 
 }
 
-bool VehiclePosition::setupPosition() {
+/*
+ * methods
+ */
+bool VehiclePosition::setupPosition() const {
     bool result = true;
 
     result &= native::SetVehiclePos(vehicle->getID(), {x, y, z});
@@ -41,6 +52,11 @@ bool VehiclePosition::syncPosition() {
     return result;
 }
 
+/*
+ * methods
+ * setters & getters
+ */
+
 void VehiclePosition::setPosition(const vec4d& position) {
     x = position.getX();
     y = position.getY();
@@ -49,5 +65,5 @@ void VehiclePosition::setPosition(const vec4d& position) {
 }
 
 vec4d VehiclePosition::getPosition() const {
-    return {x, y, z, a};
+    return vec4d{x, y, z, a};
 }

@@ -4,16 +4,23 @@
 
 #include "StateMachineManager.h"
 
-namespace pasm = player_authentication_sm;
+#include "machines.h"
 
-StateMachineManager::StateMachineManager(Player* player) {
-    authenticationStateMachine = new pasm::PlayerAuthenticationStateMachine(player);
+StateMachineManager::StateMachineManager(Player* player) : player(player) {
+
+    authorizationStateMachine = new PlayerAuthorizationStateMachine(player);
+    registrationStateMachine = new PlayerRegistrationStateMachine(player);
 }
 
 StateMachineManager::~StateMachineManager() {
-    delete authenticationStateMachine;
+    delete authorizationStateMachine;
+    delete registrationStateMachine;
 }
 
-pasm::PlayerAuthenticationStateMachine* StateMachineManager::getPlayerAuthentication() {
-    return authenticationStateMachine;
+PlayerAuthorizationStateMachine* StateMachineManager::getPlayerAuthorization() {
+    return authorizationStateMachine;
+}
+
+PlayerRegistrationStateMachine* StateMachineManager::getPlayerRegistration() {
+    return registrationStateMachine;
 }

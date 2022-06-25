@@ -21,10 +21,14 @@ public:
         MODE_READ_WRITE = (MODE_READ | MODE_WRITE),
         MODE_WRITE_READ = MODE_READ_WRITE,
     };
+
+    Mode mode;
 private:
 protected:
-    Repository();
+    Repository(Mode mode = MODE_READ);
 public:
     virtual ~Repository();
+
+    virtual bool preload();
 };
 

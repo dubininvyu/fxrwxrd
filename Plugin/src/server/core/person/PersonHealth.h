@@ -7,6 +7,8 @@
 
 class Person;
 
+typedef float health_t;
+
 class PersonHealth {
 public:
     constexpr static const float MIN_HEALTH = 0.0;

@@ -22,7 +22,7 @@ AuthorizationDialog::~AuthorizationDialog() {
 bool AuthorizationDialog::format() {
     this->dialog = DIALOG_AUTHORIZATION;
 
-    PlayerLocale& locale = *player->getLocale();
+    const AccountLocale& locale = *player->getAccount()->getLocale();
 
     switch (page) {
         case PAGE_PASSWORD:
@@ -47,25 +47,13 @@ bool AuthorizationDialog::format() {
 
 Dialog::Result AuthorizationDialog::responseStart(const unsigned int response, unsigned int listItem, const string& inputText) {
     switch (page) {
-        case PAGE_PASSWORD: {
-            if (response == BUTTON_RIGHT) {
-                return RESULT_REPEAT;
-            }
-
-            if (!PlayerPassword::isValid(inputText)) {
-                wrongAttemptsCount++;
-                return RESULT_REPEAT;
-            }
-
-            break;
-        }
-
+        case PAGE_PASSWORD:
         case PAGE_WRONG_PASSWORD: {
             if (response == BUTTON_RIGHT) {
                 return RESULT_REPEAT;
             }
 
-            if (!PlayerPassword::isValid(inputText)) {
+            if (!AccountPassword::isValid(inputText)) {
                 wrongAttemptsCount++;
                 return RESULT_REPEAT;
             }
@@ -79,24 +67,25 @@ Dialog::Result AuthorizationDialog::responseStart(const unsigned int response, u
 
 Dialog::Result AuthorizationDialog::responseEnd(const unsigned int response, unsigned int listItem, const string& inputText) {
     switch (page) {
-        case PAGE_PASSWORD: {
+        case PAGE_PASSWORD:
+        case PAGE_WRONG_PASSWORD: {
             PlayerAuthenticationService authenticationService(player);
-            unsigned int accountID = authenticationService.getUIDByPassword(inputText);
+            bool isValid = authenticationService.isRegisteredByPassword(inputText);
 
-            if (!accountID) {
+            if (!isValid) {
                 wrongAttemptsCount++;
 
                 if (wrongAttemptsCount == MAX_ATTEMPTS_ENTER_PASSWORD) {
-                    player->sendMessage(player->getLocale()->getText(TEXT_ERROR));
+                    PlayerAuthorizationStateMachine* stateMachine = player->getStateMachineManager()->getPlayerAuthorization();
+                    stateMachine->process_event(Error(Error::ERROR_AUTHORIZATION_PASSWORD_ENTERING));
                     return RESULT_CLOSE;
                 }
 
                 return RESULT_REPEAT;
             }
 
-            player->setUID(accountID);
-            player->getPassword()->setPassword(inputText, false);
-            player->getStateMachineManager()->getPlayerAuthentication()->process_event(player_authentication_sm::Next());
+            player->getAccount()->getPassword()->setPassword(inputText, false);
+            player->getStateMachineManager()->getPlayerAuthorization()->process_event(Next());
 
             break;
         }

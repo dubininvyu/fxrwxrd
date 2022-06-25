@@ -5,11 +5,10 @@
 #pragma once
 
 #include "MySQLRepository.h"
-#include "RepositoryInterface.h"
 
 class Vehicle;
 
-class VehicleRepository : public MySQLRepository, public virtual RepositoryInterface {
+class VehicleRepository : public MySQLRepository {
 private:
 protected:
     Vehicle* vehicle;

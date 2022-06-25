@@ -4,9 +4,13 @@
 
 #pragma once
 
-enum Text {
-    /* =============== short =============== */
-    TEXT_YES = 0,
+enum TextType {
+    textMin,
+
+    /*
+     * short
+     */
+    TEXT_YES,
     TEXT_NO,
     TEXT_OK,
 
@@ -15,43 +19,80 @@ enum Text {
     TEXT_PREV,
     TEXT_NEXT,
 
-    TEXT_HAVE,
-    TEXT_HAVE_NOT,
-
-    TEXT_EXIST,
-    TEXT_EXIST_NOT,
-
-    TEXT_CONNECTED,
-    TEXT_CONNECTED_NOT,
-
     TEXT_DONE,
     TEXT_DONE_NOT,
 
     TEXT_SEX_MAN,
     TEXT_SEX_WOMAN,
 
+    TEXT_ENABLED,
+    TEXT_DISABLED,
+
+    TEXT_AGE_MALE_YOUNG,
+    TEXT_AGE_MALE_ADULT,
+    TEXT_AGE_MALE_ELDERLY,
+
+    TEXT_AGE_FEMALE_YOUNG,
+    TEXT_AGE_FEMALE_ADULT,
+    TEXT_AGE_FEMALE_ELDERLY,
+
     TEXT_NULL,
 
-    /* global */
+    /*
+     * global
+     */
     TEXT_INFO,
     TEXT_ERROR,
     TEXT_WARNING,
+    TEXT_NOTE,
 
-    /* dialogs */
+    /*
+     * globals
+     */
     TEXT_DLG_AUTH_PASS_CAPTION,
     TEXT_DLG_AUTH_PASS_INFO,
+
     TEXT_DLG_AUTH_PASS_WRONG_CAPTION,
     TEXT_DLG_AUTH_PASS_WRONG_INFO,
 
+    TEXT_DLG_REG_LOCALE_CAPTION,
+
     TEXT_DLG_REG_PASS_CAPTION,
     TEXT_DLG_REG_PASS_INFO,
+
     TEXT_DLG_REG_SEX_CAPTION,
     TEXT_DLG_REG_SEX_INFO,
-    TEXT_DLG_REG_FAILED_CAPTION,
-    TEXT_DLG_REG_FAILED_INFO,
 
-    /* commands */
-    TEXT_UNKNOWN_COMMAND,
+    TEXT_DLG_REG_AGE_CAPTION,
 
-    TEXT_COUNT
+    /*
+     * commands
+     */
+    TEXT_CMD_UNKNOWN,
+
+    /*
+     * items
+     */
+    TEXT_INVENTORY_ITEM_HAND,
+    TEXT_INVENTORY_ITEM_DUFFLE_BAG,
+    TEXT_INVENTORY_ITEM_KNAPSACK,
+    TEXT_INVENTORY_ITEM_SUITCASE,
+    TEXT_INVENTORY_ITEM_TOTE_BAG,
+    TEXT_INVENTORY_ITEM_TRUNK,
+    TEXT_INVENTORY_ITEM_POCKET,
+    TEXT_INVENTORY_ITEM_BAG,
+
+    /*
+     * notification messages
+     */
+    TEXT_NOTIFICATION_SERVER_INACTIVE,
+
+    /*
+     * locales
+     */
+    TEXT_LOCALE_CAPTION_NAME,
+    TEXT_LOCALE_CAPTION_ENABLED,
+    TEXT_LOCALE_CAPTION_AUTHOR,
+
+    textMax
 };

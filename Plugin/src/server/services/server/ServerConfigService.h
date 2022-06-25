@@ -14,7 +14,6 @@ public:
     ServerConfigService(Server& server);
     virtual ~ServerConfigService();
 
-    bool setupRconConfig();
-    bool setupGameModeConfig();
+    bool setupConfig();
 };
 

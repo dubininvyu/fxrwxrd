@@ -5,22 +5,36 @@
 #include "Vehicle.h"
 
 #include "geometry.h"
+#include "event_handlers.h"
+
+#include "logs.h"
 #include "natives.h"
 
-#include "event_handlers.h"
+#include "boost/format.hpp"
+
+using namespace boost;
 
 namespace native = api_server::native;
 
-Vehicle* Vehicle::vehicles[MAX_COUNT] = {nullptr};
+typedef VehicleColor::Color Color;
 
-Vehicle::Vehicle(const unsigned id, const unsigned model, const vec4d& position, const int colors[2],  const int respawnDelay, const bool siren) :
+Vehicle::vehicles_map Vehicle::vehicles;
+
+/*
+ * constructors & destructors
+ */
+Vehicle::Vehicle(const vehicleID_t id, const VehicleModel& model, const VehiclePosition& position, const VehicleColor& color, const int respawnDelay, const bool siren) :
     id(id), respawnDelay(respawnDelay) {
 
-    this->color = new VehicleColor(this, colors);
-    this->damage = new VehicleDamage(this);
-    this->model = new VehicleModel(this, model);
-    this->param = new VehicleParam(this);
-    this->position = new VehiclePosition(this, position);
+    this->damage = new VehicleDamage(this); // vehicle damage data
+    this->param = new VehicleParam(this); // vehicle param data
+    this->data = new VehicleData(this); // personal vehicle data
+
+    if (isValid(id)) {
+        this->model = new VehicleModel(this, model); // copy constructor
+        this->position = new VehiclePosition(this, position); // copy constructor
+        this->color = new VehicleColor(this, color); // copy constructor
+    }
 }
 
 Vehicle::~Vehicle() {
@@ -28,78 +42,93 @@ Vehicle::~Vehicle() {
         native::DestroyVehicle(id);
     }
 
+    delete data;
     delete color;
     delete damage;
-    delete model;
     delete param;
     delete position;
 }
 
-Vehicle* Vehicle::create(const unsigned model, const vec4d& position, const int colors[2], const int respawnDelay, const bool siren) {
-	unsigned int vehicleID = native::CreateVehicle(model, position, colors[0], colors[1], respawnDelay, siren);
+/*
+ * methods
+ * static
+ */
+Vehicle* Vehicle::create(const VehicleModel& model, const VehiclePosition& position, const VehicleColor& color, const int respawnDelay, const bool siren) {
+    vehicleID_t vehicleID = native::CreateVehicle(model.getID(), position.getPosition(), color[Color::COLOR_PRIMARY], color[Color::COLOR_SECONDARY], respawnDelay, siren);
 
-	if (!isValid(vehicleID)) {
+	if (!isValidID(vehicleID)) {
+	    format fmt = format("Couldn't create a new vehicle with params: model = %d, position = %s, color = %s, respawnDelay = %d, addSiren = %d")
+	            % model.getID() % position.getPosition().toString() % color.print() % respawnDelay % siren;
+	    ErrorLog(__FILE__, __LINE__, fmt.str()).print();
 	    return nullptr;
 	}
 
-	vehicles[vehicleID] = new Vehicle(vehicleID, model, position, colors, respawnDelay, siren);
+	Vehicle* vehicle = new Vehicle(vehicleID, model, position, color, respawnDelay, siren);
+	vehicles.insert(pair<vehicleID_t, Vehicle*>(vehicleID, vehicle));
+
 	return vehicles[vehicleID];
 }
 
-void Vehicle::remove(Vehicle* vehicle) {
-	vehicles[vehicle->id] = nullptr;
+void Vehicle::destroy(Vehicle* vehicle) {
+    if (vehicle->isValid()) {
+        vehicles.erase(vehicle->id);
+    }
+
 	delete vehicle;
 }
 
-Vehicle* Vehicle::get(unsigned int vehicleID) {
-	Vehicle* vehicle = vehicles[vehicleID];
+Vehicle* Vehicle::get(const vehicleID_t vehicleID) {
+    if (!isValid(vehicleID)) {
+        return nullptr;
+    }
 
-	if (!vehicle->isValid()) {
-		return nullptr;
-	}
-
-	return vehicle;
+	return vehicles[vehicleID];
 }
 
 bool Vehicle::isValid() const {
-	if (!isValid(this->id)) {
-		return false;
-	}
-
-	for (Vehicle* vehicle : vehicles) {
-		if (vehicle != this) {
-			continue;
-		}
-
-		return true;
-	}
-
-	return false;
+    return isValid(id);
 }
 
-bool Vehicle::isValid(const unsigned int vehicleID) {
+bool Vehicle::isValid(const vehicleID_t vehicleID) {
+    bool result = true;
+
+    // check if id is valid
+    result &= isValidID(vehicleID);
+
+    // check if there is the vehicle
+    result &= isValidVehicle(vehicleID);
+
+    return result;
+}
+
+bool Vehicle::isValidID(const vehicleID_t vehicleID) {
 	return (vehicleID >= MIN_ID && vehicleID <= MAX_ID);
 }
 
-// ===
+bool Vehicle::isValidVehicle(const vehicleID_t vehicleID) {
+    return vehicles.count(vehicleID);
+}
 
-void Vehicle::setID(const unsigned int id) {
+/*
+ * methods
+ * setters & getters
+ */
+void Vehicle::setID(const vehicleID_t id) {
+    if (!isValid(id)) {
+        return;
+    }
+
     this->id = id;
 }
 
-unsigned int Vehicle::getID() const {
+vehicleID_t Vehicle::getID() const {
     return id;
 }
 
-void Vehicle::setUID(const unsigned int uid) {
-    this->uid = uid;
+VehicleData* Vehicle::getData() {
+    return data;
 }
 
-unsigned int Vehicle::getUID() const {
-    return uid;
-}
-
-/* parts */
 VehicleColor* Vehicle::getColor() {
     return color;
 }
@@ -119,4 +148,3 @@ VehicleParam* Vehicle::getParam() {
 VehiclePosition* Vehicle::getPosition() {
     return position;
 }
-

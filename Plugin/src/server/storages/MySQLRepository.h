@@ -10,7 +10,7 @@
 class MySQLRepository : public Repository {
 private:
 protected:
-    MySQLRepository();
+    MySQLRepository(Mode mode);
 public:
     virtual ~MySQLRepository();
 };

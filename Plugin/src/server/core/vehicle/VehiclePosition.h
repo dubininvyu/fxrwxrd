@@ -16,12 +16,23 @@ private:
 protected:
     Vehicle* vehicle;
 public:
+    /*
+     * constructors & destructors
+     */
+    VehiclePosition(const vec4d& position);
     VehiclePosition(Vehicle* vehicle, const vec4d& position);
+
     ~VehiclePosition();
 
-    bool setupPosition();
+    /*
+     * methods
+     */
+    bool setupPosition() const;
     bool syncPosition();
 
+    /*
+     * setters & getters
+     */
     void setPosition(const vec4d& position);
     vec4d getPosition() const;
 };

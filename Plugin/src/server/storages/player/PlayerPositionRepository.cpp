@@ -29,7 +29,7 @@ unsigned int PlayerPositionRepository::save() {
     vec4d& coord = position->getPosition();
 
     format fmt = format("UPDATE `accounts_positions` SET `interior` = '%d', `world` = '%d', `coord_x` = '%f', `coord_y` = '%f', `coord_z` = '%f', `coord_a` = '%f' WHERE `account` = '%d' LIMIT 1")
-                 % position->getInterior() % position->getWorld() % coord.getX() % coord.getY() % coord.getZ() % coord.getA() % player->getUID();
+                 % position->getInterior() % position->getWorld() % coord.getX() % coord.getY() % coord.getZ() % coord.getA() % player->getAccount()->getID();
 
     MySQLConnector connector(MainDatabase::getInstance());
     bool result = connector.query(fmt.str());
@@ -47,7 +47,7 @@ unsigned int PlayerPositionRepository::block() {
 
 unsigned int PlayerPositionRepository::create() {
     format fmt = format("INSERT INTO `accounts_positions` (`account`) VALUES ('%d')")
-                 % player->getUID();
+                 % player->getAccount()->getID();
 
     MySQLConnector connector(MainDatabase::getInstance());
     connector.query(fmt.str());

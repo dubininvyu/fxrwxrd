@@ -6,6 +6,7 @@
 
 #include "Player.h"
 #include "services.h"
+#include "languages.h"
 #include "repositories.h"
 
 class Player;
@@ -15,10 +16,23 @@ private:
 protected:
     PlayerRepository playerRepository;
 public:
+    /*
+     * constructors & destructors
+     */
     PlayerAuthenticationService(Player* player);
     virtual ~PlayerAuthenticationService();
 
-    bool isRegistered() const;
-    unsigned int getUIDByPassword(const string& password) const;
+    /*
+     * methods
+     * for checking registration
+     */
+    bool isRegistered();
+    bool isRegisteredByPassword(const string& password) const;
+
+    /*
+     * methods
+     * for initialization
+     */
+    void initLocale();
 };
 

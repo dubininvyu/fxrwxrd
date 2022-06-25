@@ -7,4 +7,5 @@
 /* player */
 
 /* authentication */
-#include "PlayerAuthenticationStateMachine.h"
+#include "PlayerAuthorizationStateMachine.h"
+#include "PlayerRegistrationStateMachine.h"

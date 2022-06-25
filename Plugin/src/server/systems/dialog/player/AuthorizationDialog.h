@@ -30,7 +30,7 @@ protected:
 
 public:
     AuthorizationDialog(Player* player, Page page);
-    ~AuthorizationDialog();
+    virtual ~AuthorizationDialog();
 
     virtual bool format();
 

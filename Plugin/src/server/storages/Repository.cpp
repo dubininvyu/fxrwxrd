@@ -4,10 +4,19 @@
 
 #include "Repository.h"
 
-Repository::Repository() {
+#include "logs.h"
 
+Repository::Repository(Mode mode) : mode(mode) {
+
+    if (mode & MODE_READ_ALL) {
+        preload();
+    }
 }
 
 Repository::~Repository() {
 
+}
+
+bool Repository::preload() {
+    return true;
 }

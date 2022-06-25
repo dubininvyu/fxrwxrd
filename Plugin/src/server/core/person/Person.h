@@ -5,27 +5,30 @@
 
 #pragma once
 
-#include "Animal.h"
-#include "LegalEntity.h"
-#include "TrackedEntity.h"
+#include "PrivateSubject.h"
 
+#include "PersonAge.h"
 #include "PersonArmour.h"
+#include "PersonCamera.h"
 #include "PersonHealth.h"
 #include "PersonIP.h"
-#include "PersonLevel.h"
 #include "PersonName.h"
 #include "PersonPosition.h"
+#include "PersonScore.h"
 #include "PersonSex.h"
 #include "PersonSkin.h"
 #include "PersonSpawn.h"
 #include "PersonTeam.h"
-#include "PersonCamera.h"
+
+#include "Item.h"
 
 #include <string>
 
 using namespace std;
 
-class Person : Animal, LegalEntity, TrackedEntity {
+typedef int personID_t;
+
+class Person : public virtual PrivateSubject, virtual Item {
 public:
     static const int INVALID_ID = 0xFFFF;
     static const unsigned int MIN_ID = 0;
@@ -33,51 +36,49 @@ public:
     static const unsigned int MAX_COUNT = (MAX_ID - MIN_ID + 1);
 private:
 protected:
-    int id;
+    personID_t id;
     bool active;
 
+    PersonAge* age;
     PersonArmour* armour;
+    PersonCamera* camera;
     PersonHealth* health;
     PersonIP* ip;
-    PersonLevel* level;
     PersonName* name;
     PersonPosition* position;
+    PersonScore* score;
     PersonSex* sex;
     PersonSkin* skin;
     PersonSpawn* spawn;
     PersonTeam* team;
-    PersonCamera* camera;
 
     /* others */
     bool spawned;
-    bool authorized;
 
-    Person(const int id, const bool active);
+    Person(const personID_t id, const bool active);
 public:
     virtual ~Person();
 
-    void setID(const int id);
-    int getID() const;
+    void setID(const personID_t id);
+    personID_t getID() const;
 
     void setActive(const bool active);
     bool isActive() const;
 
+    PersonAge* getAge();
     PersonArmour* getArmour();
+    PersonCamera* getCamera();
     PersonHealth* getHealth();
     PersonIP* getIP();
-    PersonLevel* getLevel();
     PersonName* getName();
     PersonPosition* getPosition();
+    PersonScore* getScore();
     PersonSex* getSex();
     PersonSkin* getSkin();
     PersonSpawn* getSpawn();
     PersonTeam* getTeam();
-    PersonCamera* getCamera();
 
     /* others */
-    void setSpawned(bool isSpawned);
+    void setSpawned(const bool isSpawned);
     bool isSpawned() const;
-
-    void setAuthorized(bool isAuthorized);
-    bool isAuthorized() const;
 };

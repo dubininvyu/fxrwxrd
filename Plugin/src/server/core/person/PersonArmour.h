@@ -7,6 +7,8 @@
 
 class Person;
 
+typedef float armour_t;
+
 class PersonArmour {
 public:
     constexpr static const float MIN_ARMOUR = 0.0;

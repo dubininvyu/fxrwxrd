@@ -7,7 +7,7 @@
 #include "PlayerRepository.h"
 #include "PlayerDisconnectHandler.h"
 
-class PlayerSessionRepository : public PlayerRepository, virtual public RepositoryInterface {
+class PlayerSessionRepository : public PlayerRepository {
 private:
 protected:
 public:

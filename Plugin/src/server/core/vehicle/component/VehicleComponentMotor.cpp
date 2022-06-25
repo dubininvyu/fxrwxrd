@@ -3,6 +3,7 @@
 //
 
 #include "VehicleComponentMotor.h"
+#include "VehicleComponent.h"
 
 VehicleComponentMotor::VehicleComponentMotor() : VehicleComponent() {
 
@@ -10,4 +11,8 @@ VehicleComponentMotor::VehicleComponentMotor() : VehicleComponent() {
 
 VehicleComponentMotor::~VehicleComponentMotor() {
 
+}
+
+float VehicleComponentMotor::getMinSpeed() {
+    return 0;
 }

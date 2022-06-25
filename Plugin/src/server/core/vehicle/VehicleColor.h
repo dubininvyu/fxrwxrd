@@ -4,7 +4,13 @@
 
 #pragma once
 
+#include <string>
+
+using namespace std;
+
 class Vehicle;
+
+typedef unsigned char colorID_t;
 
 class VehicleColor {
 public:
@@ -12,18 +18,45 @@ public:
         COLOR_PRIMARY,
         COLOR_SECONDARY,
 
-        COUNT
+        colorMax
     };
 private:
 protected:
     Vehicle* vehicle;
-    int colors[Color::COUNT];
+
+    colorID_t colors[colorMax];
 public:
-    VehicleColor(Vehicle* vehicle, const int colors[2]);
+    /*
+     * constructors & destructors
+     */
+    VehicleColor(const colorID_t colors[colorMax]);
+    VehicleColor(Vehicle* vehicle, const VehicleColor& color);
+
     ~VehicleColor();
 
-    bool setupColor();
+    /*
+     * operators
+     */
+    colorID_t operator [](const Color colorType) const;
 
-    void setColor(const Color type, const int color);
-    int getColor(const Color type) const;
+    /*
+     * methods
+     * checkers
+     */
+    const bool isValidColor(const Color colorType) const;
+
+    /*
+     * methods
+     * basic
+     */
+    string print() const;
+
+    bool setupColor() const;
+
+    /*
+     * setters & getters
+     */
+    void setColor(const Color type, const colorID_t colorType);
+    void setColors(const colorID_t colors[colorMax], const bool reWrite = true);
+    colorID_t getColor(const Color colorType) const;
 };

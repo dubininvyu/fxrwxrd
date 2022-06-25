@@ -4,7 +4,7 @@
 
 #include "MySQLRepository.h"
 
-MySQLRepository::MySQLRepository() : Repository() {
+MySQLRepository::MySQLRepository(Mode mode) : Repository(mode) {
 
 }
 

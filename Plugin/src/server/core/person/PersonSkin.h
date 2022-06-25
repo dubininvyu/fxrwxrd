@@ -13,11 +13,13 @@ class Person;
 
 using namespace std;
 
+typedef size_t skinID_t;
+
 class PersonSkin {
 public:
-    constexpr static const unsigned int MIN_ID = 0;
-    constexpr static const unsigned int MAX_ID = 299;
-    constexpr static const unsigned int MAX_COUNT = (MAX_ID - MIN_ID + 1);
+    constexpr static const skinID_t MIN_ID = 0;
+    constexpr static const skinID_t MAX_ID = 299;
+    constexpr static const skinID_t MAX_COUNT = (MAX_ID - MIN_ID + 1);
 
     enum SkinType {
         TYPE_CASUAL,
@@ -28,22 +30,22 @@ public:
     };
 private:
 protected:
-    unsigned int skin;
+    skinID_t skin;
     SkinType type;
 
     Person* person;
 public:
-    PersonSkin(const unsigned int skin = 0);
-    PersonSkin(Person* person, const unsigned int skin = 0);
+    PersonSkin(const skinID_t skin = 0);
+    PersonSkin(Person* person, const skinID_t skin = 0);
 
-    void setSkin(const unsigned int skin);
-    unsigned int getSkin() const;
+    void setSkin(const skinID_t skin);
+    skinID_t getSkin() const;
 
     void syncSkin();
 
     SkinType getType() const;
 
     bool isValid();
-    static bool isValid(const unsigned int skin);
+    static bool isValid(const skinID_t skin);
 };
 

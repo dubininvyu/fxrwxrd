@@ -5,25 +5,34 @@
 #include "PlayerRepository.h"
 
 #include "Player.h"
+#include "Server.h"
+#include "Account.h"
+#include "AccountLocale.h"
 #include "Exception.h"
-#include "MainDatabase.h"
+
+#include "logs.h"
+#include "databases.h"
 
 #include "boost/format.hpp"
 
 using namespace std;
 using namespace boost;
 
-PlayerRepository::PlayerRepository(Player* player, const Mode mode) : MySQLRepository(), player(player), mode(mode) {
-    if (mode & MODE_READ_ALL) {
-        preload();
-    }
+/*
+ * constructors & destructors
+ */
+PlayerRepository::PlayerRepository(Player* player, const Mode mode) : MySQLRepository(mode), player(player) {
+
 }
 
 PlayerRepository::~PlayerRepository() {
 
 }
 
-/* main */
+/*
+ * methods
+ * virtual
+ */
 
 bool PlayerRepository::preload() {
     return true;
@@ -31,7 +40,7 @@ bool PlayerRepository::preload() {
 
 unsigned int PlayerRepository::load() {
     format fmt = format("SELECT * FROM `accounts` a LEFT JOIN accounts_positions ap ON a.`id` = `ap`.`account` WHERE a.`id` = '%d' LIMIT 1")
-                 % player->getUID();
+                 % player->getAccount()->getID();
 
     MySQLConnector connector(MainDatabase::getInstance());
     connector.query(fmt.str());
@@ -47,7 +56,7 @@ unsigned int PlayerRepository::load() {
 
     enum {
         // accounts
-        ID, NAME, PASSWORD, REGISTRATION_DATE, LAST_ONLINE_DATE, LOCALE, SEX, SKIN, LEVEL, HEALTH, ARMOUR,
+        ID, NAME, PASSWORD, REGISTRATION_DATE, LAST_ONLINE_DATE, LOCALE, SEX, AGE, SKIN, LEVEL, HEALTH, ARMOUR,
         // accounts_positions
         ID_, ACCOUNT, TIME, INTERIOR, WORLD, COORD_X, COORD_Y, COORD_Z, COORD_A
     };
@@ -58,10 +67,13 @@ unsigned int PlayerRepository::load() {
     PersonSex::Sex sex = PersonSex::Sex(atoi(row[SEX]));
     player->getSex()->setSex(sex);
 
+    PersonAge::Age age = PersonAge::Age(atoi(row[AGE]));
+    player->getAge()->setAge(age);
+
     PersonSkin* skin = player->getSkin();
     skin->setSkin(atoi(row[SKIN]));
 
-    PersonLevel* level = player->getLevel();
+    AccountLevel* level = player->getAccount()->getLevel();
     level->setLevel(atoi(row[LEVEL]));
 
     PersonHealth* health = player->getHealth();
@@ -73,9 +85,9 @@ unsigned int PlayerRepository::load() {
     // accounts_positions
     vec4d pos(
             stof(row[COORD_X]),
-            stof(row[COORD_X]),
-            stof(row[COORD_X]),
-            stof(row[COORD_X])
+            stof(row[COORD_Y]),
+            stof(row[COORD_Z]),
+            stof(row[COORD_A])
     );
 
     PersonSpawn* spawn = player->getSpawn();
@@ -94,9 +106,15 @@ unsigned int PlayerRepository::update() {
     return 0;
 }
 
-unsigned int PlayerRepository::create() {
-    format fmt = format("INSERT INTO `accounts` (`name`, `password`, `sex`) VALUES ('%s', MD5('%s'), '%d')")
-                 % player->getName()->getName() % player->getPassword()->getPassword() % player->getSex()->getSex();
+accountID_t PlayerRepository::create(const string& name, const string& password, const Sex sex, const Age age) {
+
+    RegistrationConfig* registrationConfig = Server::getInstance().getRegistrationConfig();
+
+    skinID_t skin = registrationConfig->getRandomSkin(sex, age);
+    health_t health = registrationConfig->getHealth(sex, age);
+
+    string query = "INSERT INTO `accounts` (`name`, `password`, `sex`, `age`, `skin`, `health`) VALUES ('%s', MD5('%s'), '%d', '%d', '%d', '%f')";
+    format fmt = format(query) % name % password % sex % age % skin % health;
 
     MySQLConnector connector(MainDatabase::getInstance());
     connector.query(fmt.str());
@@ -104,18 +122,11 @@ unsigned int PlayerRepository::create() {
     return connector.getInsertedID();
 }
 
-/* is ... */
-bool PlayerRepository::isRegistered() const {
-    return (getUID() > 0);
-}
-
-bool PlayerRepository::isRegisteredByPassword(const string& password) const {
-    return (getUIDByPassword(password) > 0);
-}
-
-
-/* get uid */
-unsigned int PlayerRepository::getUID() const {
+/*
+ * methods
+ * for checking registration
+ */
+accountID_t PlayerRepository::getID() const {
     format fmt = format(
             "SELECT `id` FROM `accounts` WHERE `name` = '%s' LIMIT 1")
                  % player->getName()->getName();
@@ -125,11 +136,11 @@ unsigned int PlayerRepository::getUID() const {
 
     SQLResult result = connector.storeResult();
     if (!result) {
-        return 0;
+        return Account::INVALID_ID;
     }
 
     if (!result.getNumRows()) {
-        return 0;
+        return Account::INVALID_ID;
     }
 
     enum {ID};
@@ -138,7 +149,7 @@ unsigned int PlayerRepository::getUID() const {
     return atoi(row[ID]);
 }
 
-unsigned int PlayerRepository::getUIDByPassword(const string& password) const {
+accountID_t PlayerRepository::getIDByPassword(const string& password) const {
     format fmt = format("SELECT `id` FROM `accounts` WHERE `name` = '%s' AND `password` = MD5('%s') LIMIT 1")
                  % player->getName()->getName() % password;
 
@@ -147,11 +158,11 @@ unsigned int PlayerRepository::getUIDByPassword(const string& password) const {
 
     SQLResult result = connector.storeResult();
     if (!result) {
-        return 0;
+        return Account::INVALID_ID;
     }
 
     if (!result.getNumRows()) {
-        return 0;
+        return Account::INVALID_ID;
     }
 
     enum {ID};
@@ -160,16 +171,14 @@ unsigned int PlayerRepository::getUIDByPassword(const string& password) const {
     return atoi(row[ID]);
 }
 
-/* others */
-
-Language PlayerRepository::getLanguage() const {
-    if (!player->getUID()) {
+Language PlayerRepository::getLocale() const {
+    if (!player->getAccount()) {
         return LANGUAGE_DEFAULT;
     }
 
     format fmt = format(
             "SELECT `locale`, (SELECT `enabled` FROM `locales` WHERE `id` = `locale` LIMIT 1) FROM `accounts` WHERE `id` = '%d' LIMIT 1"
-            ) % player->getUID();
+    ) % player->getAccount()->getID();
 
     MySQLConnector connector(MainDatabase::getInstance());
     connector.query(fmt.str());
@@ -187,7 +196,7 @@ Language PlayerRepository::getLanguage() const {
 
     MYSQL_ROW row = result.fetchRow();
 
-    unsigned int languageID = atoi(row[LOCALE]);
+    locale_t languageID = atoi(row[LOCALE]);
     bool isEnabled = atoi(row[LOCALE_ENABLED]);
 
     if (!isEnabled) {

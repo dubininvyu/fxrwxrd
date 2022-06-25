@@ -17,8 +17,10 @@ class Player;
 class RegistrationDialog : public Dialog {
 public:
     enum Page {
-        PAGE_PASSWORD = 0,
+        PAGE_LOCALE = 0,
+        PAGE_PASSWORD,
         PAGE_SEX,
+        PAGE_AGE,
 
         COUNT
     };

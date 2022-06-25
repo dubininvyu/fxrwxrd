@@ -13,6 +13,8 @@ class Player;
 
 using namespace std;
 
+typedef size_t adminID_t;
+
 class Admin {
 public:
     enum AdminLevel {
@@ -31,7 +33,7 @@ protected:
     AdminLevel level;
     AdminPassword* password;
 
-    unsigned int uid;
+    adminID_t id;
     string name;
 
     static vector<Player*> admins;
@@ -44,8 +46,8 @@ public:
     Admin(Player* player);
     ~Admin();
 
-    void setUID(const unsigned int uid);
-    unsigned int getUID() const;
+    void setID(const adminID_t uid);
+    adminID_t getID() const;
 
     bool isAdmin() const;
 

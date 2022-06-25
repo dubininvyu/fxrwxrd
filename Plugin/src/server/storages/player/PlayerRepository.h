@@ -4,35 +4,53 @@
 
 #pragma once
 
-#include "PersonSex.h"
+#include "Person.h"
 #include "MySQLRepository.h"
-#include "RepositoryInterface.h"
 #include "PlayerDisconnectHandler.h"
+#include "Account.h"
+
 #include "languages.h"
 
 class Player;
 
-class PlayerRepository : public MySQLRepository, virtual public RepositoryInterface {
+typedef PersonSex::Sex Sex;
+typedef PersonAge::Age Age;
+
+class PlayerRepository : public MySQLRepository {
 private:
 protected:
     Player* player;
     Mode mode;
 public:
+    /*
+     * constructors & destructors
+     */
     PlayerRepository(Player* player, const Mode mode = MODE_NOPE);
     virtual ~PlayerRepository();
 
+    /*
+     * methods
+     * virtual
+     */
     virtual bool preload();
 
     virtual unsigned int load();
     virtual unsigned int block();
     virtual unsigned int update();
-    virtual unsigned int create();
+    virtual accountID_t create(const string& name, const string& password, const Sex sex, const Age age);
 
-    bool isRegistered() const;
-    bool isRegisteredByPassword(const string& password) const;
+    /*
+     * methods
+     * for checking registration
+     */;
+    accountID_t getID() const;
+    accountID_t getIDByPassword(const string& password) const;
 
-    unsigned int getUID() const;
-    unsigned int getUIDByPassword(const string& password) const;
+    Language getLocale() const;
 
-    Language getLanguage() const;
+    /*
+     * methods
+     * ...
+     */
+
 };

@@ -13,8 +13,8 @@
 using namespace std;
 using namespace boost;
 
-AdminRepository::AdminRepository(Player* player, const Mode mode) : MySQLRepository(), player(player), mode(mode) {
-    if (mode & MODE_READ_ALL) {
+AdminRepository::AdminRepository(Player* player, const Mode mode) : MySQLRepository(mode), player(player) {
+    if (mode & MODE_READ) {
         preload();
     }
 }
@@ -28,12 +28,12 @@ bool AdminRepository::preload() {
 }
 
 bool AdminRepository::isRegistered() const {
-    return (getUID() > 0);
+    return (getID() > 0);
 }
 
 bool AdminRepository::loadAdmin() {
     format fmt = format("SELECT * FROM `admins` WHERE `account` = '%d' LIMIT 1")
-                 % player->getUID();
+                 % player->getAccount()->getID();
 
     MySQLConnector connector(MainDatabase::getInstance());
     connector.query(fmt.str());
@@ -53,8 +53,8 @@ bool AdminRepository::loadAdmin() {
 
     MYSQL_ROW row = result.fetchRow();
 
-    unsigned int uid = atoi(row[ID]);
-    player->getAdmin()->setUID(uid);
+    adminID_t id = atoi(row[ID]);
+    player->getAdmin()->setID(id);
 
     Admin::AdminLevel level = Admin::AdminLevel(atoi(row[LEVEL]));
     player->getAdmin()->setLevel(level);
@@ -67,7 +67,7 @@ bool AdminRepository::loadAdmin() {
 
 unsigned int AdminRepository::createAdmin(const Admin::AdminLevel level, const string& password) {
     format fmt = format("INSERT INTO `admins` (`account`, `level`, `password`) VALUES ('%d', '%d', MD5('%s'))")
-                 % player->getAdmin()->getUID() % level % password;
+                 % player->getAdmin()->getID() % level % password;
 
     MySQLConnector connector(MainDatabase::getInstance());
     connector.query(fmt.str());
@@ -77,7 +77,7 @@ unsigned int AdminRepository::createAdmin(const Admin::AdminLevel level, const s
 
 bool AdminRepository::destroyAdmin() {
     format fmt = format("DELETE FROM `admins` WHERE `id` = '%d' LIMIT 1")
-                 % player->getAdmin()->getUID();
+                 % player->getAdmin()->getID();
 
     MySQLConnector connector(MainDatabase::getInstance());
     bool result = connector.query(fmt.str());
@@ -85,10 +85,10 @@ bool AdminRepository::destroyAdmin() {
     return !result;
 }
 
-unsigned int AdminRepository::getUID() const {
+adminID_t AdminRepository::getID() const {
     format fmt = format(
             "SELECT `id` FROM `admins` WHERE `account` = '%d' LIMIT 1")
-            % player->getUID();
+            % player->getAccount()->getID();
 
     MySQLConnector connector(MainDatabase::getInstance());
     connector.query(fmt.str());
@@ -108,9 +108,9 @@ unsigned int AdminRepository::getUID() const {
     return atoi(row[ID]);
 }
 
-unsigned int AdminRepository::getUID(const string& password) const {
+adminID_t AdminRepository::getID(const string& password) const {
     format fmt = format("SELECT `id` FROM `admins` WHERE `account` = '%d' AND `password` = MD5('%s') LIMIT 1")
-                 % player->getUID() % password;
+                 % player->getAccount()->getID() % password;
 
     MySQLConnector connector(MainDatabase::getInstance());
     connector.query(fmt.str());

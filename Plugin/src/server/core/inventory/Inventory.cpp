@@ -5,31 +5,11 @@
 
 #include "Inventory.h"
 
-Inventory::Inventory(std::string name, float weight, float volume) : name(name), weight(weight), volume(volume), items(), Item() {
+Inventory::Inventory(const string& name, const float maxWeight, const float weight, const float length, const float width, const float height) :
+    maxWeight(maxWeight)/*, Item(name, weight, length, width, height)*/ {
 
 }
 
-void Inventory::setName(std::string name) {
-    this->name = name;
-}
-std::string Inventory::getName() {
-    return this->name;
-}
-
-void Inventory::setWeight(float weight) {
-    this->weight = weight;
-}
-float Inventory::getWeight() {
-    return this->weight;
-}
-
-void Inventory::setVolume(float volume) {
-    this->volume = volume;
-}
-float Inventory::getVolume() {
-    return this->volume;
-}
-
-std::vector<Item*> Inventory::getItems() {
-    return this->items;
+float Inventory::getMaxWeight() const {
+    return maxWeight;
 }

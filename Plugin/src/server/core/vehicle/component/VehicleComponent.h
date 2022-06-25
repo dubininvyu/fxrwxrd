@@ -5,9 +5,14 @@
 
 #pragma once
 
-#include "Entity.h"
+#include "Item.h"
 
-class VehicleComponent : Entity {
+class VehicleComponentMotor;
+class VehicleComponentFuelTank;
+
+class Vehicle;
+
+class VehicleComponent : Item {
 public:
     enum ComponentType {
         SPOILER = 0,
@@ -27,8 +32,18 @@ public:
     };
 private:
 protected:
+    Vehicle* vehicle;
+
+    VehicleComponentMotor* motor;
+    VehicleComponentFuelTank* fuelTank;
 public:
     VehicleComponent();
     virtual ~VehicleComponent();
+
+    void setMotor(VehicleComponentMotor* motor);
+    VehicleComponentMotor* getMotor();
+
+    void setFuelTank(VehicleComponentFuelTank* fuelTank);
+    VehicleComponentFuelTank* getFuelTank();
 };
 

@@ -6,9 +6,8 @@
 
 #include "PlayerRepository.h"
 #include "PersonPosition.h"
-#include "RepositoryInterface.h"
 
-class PlayerPositionRepository : public PlayerRepository, virtual public RepositoryInterface {
+class PlayerPositionRepository : public PlayerRepository {
 private:
 protected:
 public:

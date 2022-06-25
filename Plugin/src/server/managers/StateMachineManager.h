@@ -8,19 +8,19 @@
 
 class Player;
 
-namespace pasm = player_authentication_sm;
-
 class StateMachineManager {
 public:
 private:
 protected:
     Player* player;
 
-    pasm::PlayerAuthenticationStateMachine* authenticationStateMachine;
+    PlayerAuthorizationStateMachine* authorizationStateMachine;
+    PlayerRegistrationStateMachine* registrationStateMachine;
 public:
     StateMachineManager(Player* player);
     ~StateMachineManager();
 
-    pasm::PlayerAuthenticationStateMachine* getPlayerAuthentication();
+    PlayerAuthorizationStateMachine* getPlayerAuthorization();
+    PlayerRegistrationStateMachine* getPlayerRegistration();
 };
 

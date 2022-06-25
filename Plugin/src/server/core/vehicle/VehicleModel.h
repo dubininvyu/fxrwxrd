@@ -5,12 +5,16 @@
 #pragma once
 
 #include "Player.h"
-#include "ModelType.h"
-#include "VehicleInfo.h"
+#include "VehicleConfiguration.h"
+#include "VehicleSignal.h"
 
+#include <map>
 #include <string>
 
 using namespace std;
+
+typedef unsigned int modelID_t;
+typedef AccountLicense::License License;
 
 class Vehicle;
 
@@ -20,7 +24,7 @@ public:
     static const unsigned int MAX_ID = 611;
     static const unsigned int MAX_COUNT = (MAX_ID - MIN_ID);
 
-    enum ModelInfo {
+    enum Info {
         SIZE = 1,
         FRONT_SEAT,
         REAR_SEAT,
@@ -31,25 +35,68 @@ public:
         BUMPER_Z_FRONT,
         BUMPER_Z_REAR
     };
+
+    enum Type {
+        TYPE_NOPE = 0,
+
+        TYPE_CAR,
+        TYPE_BOAT,
+        TYPE_HELICOPTER,
+        TYPE_AIRPLANE,
+        TYPE_BICYCLE,
+        TYPE_TRAIN,
+        TYPE_TRAILER,
+        TYPE_BIKE,
+        TYPE_REMOTE,
+        TYPE_UNKNOWN
+    };
+
 private:
 protected:
+    modelID_t id;
     Vehicle* vehicle;
-    unsigned int model;
 
-    string name;
-    ModelType* type;
-    VehicleInfo* info;
-    PlayerLicense::License license;
+    Type type;
+    License license;
+
+    VehicleSignal* signal;
+    VehicleConfiguration* configuration;
+
+    typedef map<modelID_t, VehicleModel*> models_type;
+    static models_type models;
+
+    VehicleModel(const modelID_t id, const Type type, const License license);
 public:
-    VehicleModel(Vehicle* vehicle, unsigned int model);
-    VehicleModel(const unsigned int model, const string& name, const PlayerLicense::License license);
+    /*
+     * constructors & destructors
+     */
+    VehicleModel(const modelID_t id);
+    VehicleModel(Vehicle* vehicle, const VehicleModel& vehicleModel); // copy constructor
     ~VehicleModel();
 
-    static bool isValid(unsigned int model);
-    bool isValid() const;
+    /*
+     * methods
+     * static
+     */
+    static VehicleModel* addModel(const modelID_t id, const Type type, const License license);
+    static VehicleModel* getModel(const modelID_t id);
 
-    ModelType* getType();
+    static bool isValidID(const modelID_t id);
+    bool isValidID() const;
 
-    void setInfo(VehicleInfo* info);
-    VehicleInfo* getInfo();
+    /*
+     * methods
+     * setters & getters
+     */
+    void setID(const modelID_t id);
+    modelID_t getID() const;
+
+    void setType(const Type type);
+    Type getType() const;
+
+    void setLicense(const License license);
+    License getLicense() const;
+
+    VehicleSignal* getSignal();
+    VehicleConfiguration* getConfiguration();
 };

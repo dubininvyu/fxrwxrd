@@ -14,12 +14,12 @@ Admin::~Admin() {
     delete password;
 }
 
-void Admin::setUID(const unsigned int uid) {
-    this->uid = uid;
+void Admin::setID(const adminID_t id) {
+    this->id = id;
 }
 
-unsigned int Admin::getUID() const {
-    return this->uid;
+adminID_t Admin::getID() const {
+    return this->id;
 }
 
 bool Admin::isAdmin() const {

@@ -8,6 +8,10 @@
 #include "PlayerService.h"
 #include "PlayerRepository.h"
 
+#include "machines_events.h"
+
+typedef Error::ErrorType ErrorType;
+
 class PlayerAuthorizationService : public PlayerService {
 private:
 protected:
@@ -16,7 +20,10 @@ public:
     PlayerAuthorizationService(Player* player);
     virtual ~PlayerAuthorizationService();
 
-    bool beginPasswordAuthorization();
-    bool endAuthorization();
+    bool beginLocale();
+    bool beginPassword();
+    bool authorize();
+
+    bool stop(const ErrorType error);
 };
 

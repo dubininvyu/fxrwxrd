@@ -4,20 +4,36 @@
 
 #pragma once
 
-/* admin */
+/*
+ * admin
+ */
 #include "AdminRepository.h"
 
-/* mysql */
+/*
+ * config
+ */
+#include "RconConfigRepository.h"
+#include "RegistrationConfigRepository.h"
+
+/*
+ * mysql
+ */
 #include "DatabaseConfigRepository.h"
 
-/* player */
+/*
+ * player
+ */
 #include "PlayerPositionRepository.h"
 #include "PlayerRepository.h"
 #include "PlayerSessionRepository.h"
 
-/* server */
+/*
+ * server
+ */
 #include "LocaleRepository.h"
-#include "ServerRconConfigRepository.h"
 
-/* vehicle */
+/*
+ * vehicle
+ */
+#include "VehicleModelRepository.h"
 #include "VehicleRepository.h"

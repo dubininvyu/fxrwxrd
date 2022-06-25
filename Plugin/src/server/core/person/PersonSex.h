@@ -16,7 +16,11 @@ public:
     enum Sex {
         SEX_MALE = 0,
         SEX_FEMALE,
+
+        sexMax
     };
+
+    static const unsigned int MAX_COUNT = sexMax;
 private:
 protected:
     Person* person;

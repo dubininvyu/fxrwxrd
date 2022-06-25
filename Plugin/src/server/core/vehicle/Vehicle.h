@@ -7,64 +7,74 @@
 #include "Player.h"
 #include "Entity.h"
 
+#include "VehicleData.h"
 #include "VehicleColor.h"
 #include "VehicleDamage.h"
 #include "VehicleModel.h"
 #include "VehicleParam.h"
 #include "VehiclePosition.h"
 
-#include "ModelType.h"
-
 #include "geometry.h"
 
 using namespace geometry;
 
-class Vehicle : Entity {
+typedef size_t vehicleID_t;
+
+class Vehicle : protected virtual Item {
 public:
 	static const int MIN_ID = 1;
 	static const int MAX_ID = 2000;
 	static const int MAX_COUNT = (MAX_ID - MIN_ID + 1);
 	static const int INVALID_ID = 0xFFFF;
-
 private:
 protected:
-    VehicleModel* model;
-    VehicleColor* color;
-    VehiclePosition* position;
+    /* basic vehicle data */
+    VehicleModel* model = nullptr;
+    VehicleColor* color = nullptr;
+    VehiclePosition* position = nullptr;
 
-    VehicleParam* param;
-    VehicleDamage* damage;
+    VehicleParam* param = nullptr;
+    VehicleDamage* damage = nullptr;
 
-    int respawnDelay;
+    const int respawnDelay;
 
-    // ======
-	unsigned int id;
-    unsigned int uid;
+    /* extended vehicle data */
+    vehicleID_t id;
+    VehicleData* data;
 
-    static Vehicle* vehicles[MAX_COUNT];
+    typedef map<vehicleID_t, Vehicle*> vehicles_map;
+    static vehicles_map vehicles;
 
-    Vehicle(const unsigned id, const unsigned model, const vec4d& position, const int colors[2], const int respawnDelay = -1, const bool siren = false);
+    Vehicle(const vehicleID_t id, const VehicleModel& model, const VehiclePosition& position, const VehicleColor& color, const int respawnDelay = -1, const bool siren = false);
 public:
 	~Vehicle();
 
-	static Vehicle* create(const unsigned model, const vec4d& position, const int colors[2], const int respawnDelay = -1, const bool siren = false);
-	static void remove(Vehicle* vehicle);
-	static Vehicle* get(const unsigned int vehicleID);
+	/*
+	 * methods
+	 * static
+	 */
+	static Vehicle* create(const VehicleModel& model, const VehiclePosition& position, const VehicleColor& color, const int respawnDelay = -1, const bool siren = false);
+	static void destroy(Vehicle* vehicle);
+	static Vehicle* get(const vehicleID_t vehicleID);
 
 	bool isValid() const;
-	static bool isValid(const unsigned int vehicleID);
+	static bool isValid(const vehicleID_t vehicleID);
 
-	void setID(const unsigned int id);
-	unsigned int getID() const;
+	static bool isValidID(const vehicleID_t vehicleID);
+	static bool isValidVehicle(const vehicleID_t vehicleID);
 
-	void setUID(const unsigned int uid);
-	unsigned int getUID() const;
+	/*
+	 * methods
+	 * setters & getters
+	 */
+	void setID(const vehicleID_t id);
+    vehicleID_t getID() const;
 
-	/* parts */
+    VehicleData* getData();
+
 	VehicleColor* getColor();
     VehicleDamage* getDamage();
 	VehicleModel* getModel();
 	VehicleParam* getParam();
 	VehiclePosition* getPosition();
-
 };

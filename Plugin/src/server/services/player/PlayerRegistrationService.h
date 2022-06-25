@@ -10,6 +10,9 @@
 
 #include "services.h"
 #include "repositories.h"
+#include "machines_events.h"
+
+typedef Error::ErrorType ErrorType;
 
 class PlayerRegistrationService : public PlayerService {
 private:
@@ -19,8 +22,12 @@ public:
     PlayerRegistrationService(Player* player);
     virtual ~PlayerRegistrationService();
 
-    bool beginPasswordRegistration();
-    bool beginSexRegistration();
-    bool endRegistration();
+    bool startLocaleEntering();
+    bool startPasswordEntering();
+    bool startSexEntering();
+    bool startAgeEntering();
+    bool stop(const ErrorType error); // if it's an error
+
+    bool registerAccount();
 };
 

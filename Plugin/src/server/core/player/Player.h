@@ -6,11 +6,9 @@
 
 #include "Person.h"
 
+#include "Account.h"
 #include "Admin.h"
-
-#include "PlayerLocale.h"
-#include "PlayerPassword.h"
-#include "PlayerLicense.h"
+#include "RconAdmin.h"
 
 #include "managers.h"
 
@@ -24,60 +22,60 @@ public:
     static const unsigned int MAX_LENGTH_SERIAL;
 private:
 protected:
-    unsigned int uid;
+    static size_t count;
     static Player* players[];
 
     /* main */
+    Account* account;
     Admin* admin;
-    PlayerPassword* password;
-    PlayerLocale* locale;
-    PlayerLicense* license;
+    RconAdmin* rconAdmin;
 
     DialogManager* dialogManager;
     StateMachineManager* stateMachineManager;
 
     /* others */
+    bool authorized;
 public:
     Player();
-    Player(unsigned int playerID);
+    Player(const personID_t id, const bool active);
     virtual ~Player();
 
     /* main */
-    static Player* create(int playerID);
-    static Player* get(int playerID);
+    static Player* create(const personID_t id);
+    static Player* get(const personID_t id);
     void remove() const;
 
-    static unsigned int getCount();
+    static const size_t getCount();
 
     bool isValid() const;
-    static bool isValid(unsigned int playerID);
+    static bool isValid(const personID_t id);
+
+    void call(const function<void(Player*)> f);
+    static void callEveryone(const function<void(Player*)> f);
 
     /* setters & getters */
-    void setUID(const unsigned int uid);
-    unsigned int getUID() const;
+
 
     /* main */
+    Account* getAccount();
     Admin* getAdmin();
-    PlayerPassword* getPassword();
-
-    void setLocale(Language language);
-    PlayerLocale* getLocale() const;
-
-    PlayerLicense* getLicense();
+    RconAdmin* getRconAdmin();
 
     /* managers */
     DialogManager* getDialogManager();
     StateMachineManager* getStateMachineManager();
 
     /* others */
+    void setAuthorized(const bool isAuthorized);
+    bool isAuthorized() const;
 
     /* functions */
     void init();
 
     /* natives */
-    bool sendMessage(Text text) const;
+    bool sendMessage(TextType text) const;
     bool sendMessage(const string& message) const;
-    static bool sendMessageToAll(Text text);
+    static bool sendMessageToAll(TextType text);
     static bool sendMessageToAll(const string& message);
 
 };

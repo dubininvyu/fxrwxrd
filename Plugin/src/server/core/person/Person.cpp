@@ -3,43 +3,61 @@
 //
 
 #include "Person.h"
+#include "ItemType.h"
 
-Person::Person(const int id, const bool active) : Animal(), LegalEntity(), TrackedEntity(),
-    id(id), active(active) {
+/*
+ * constructors & destructors
+ */
 
+Person::Person(const personID_t id, const bool active) : PrivateSubject(), id(id), active(active)
+    /*Item(ItemType::TYPE_PERSON, "", 0.0, 0.0, 0.0, 0.0)*/ {
+
+    age = new PersonAge(this);
     armour = new PersonArmour(this);
+    camera = new PersonCamera(this);
     health = new PersonHealth(this);
     ip = new PersonIP(this);
-    level = new PersonLevel(this);
     name = new PersonName(this);
     position = new PersonPosition(this);
+    score = new PersonScore(this);
     sex = new PersonSex(this);
     skin = new PersonSkin(this);
     spawn = new PersonSpawn(this);
     team = new PersonTeam(this);
-    camera = new PersonCamera(this);
 }
 
 Person::~Person() {
+    delete age;
     delete armour;
+    delete camera;
     delete health;
     delete ip;
-    delete level;
     delete name;
     delete position;
+    delete score;
     delete sex;
     delete skin;
     delete spawn;
     delete team;
-    delete camera;
 }
 
-void Person::setID(const int id){
+/*
+ * setters & getters
+ */
+void Person::setID(const personID_t id){
     this->id = id;
 }
 
-int Person::getID() const {
+personID_t Person::getID() const {
     return this->id;
+}
+
+void Person::setSpawned(const bool isSpawned) {
+    this->spawned = isSpawned;
+}
+
+bool Person::isSpawned() const {
+    return this->spawned;
 }
 
 void Person::setActive(const bool active) {
@@ -48,6 +66,10 @@ void Person::setActive(const bool active) {
 
 bool Person::isActive() const {
     return this->active;
+}
+
+PersonAge* Person::getAge() {
+    return this->age;
 }
 
 PersonArmour* Person::getArmour() {
@@ -62,8 +84,8 @@ PersonIP* Person::getIP() {
     return this->ip;
 }
 
-PersonLevel* Person::getLevel() {
-    return this->level;
+PersonScore* Person::getScore() {
+    return this->score;
 }
 
 PersonName* Person::getName() {
@@ -92,21 +114,4 @@ PersonTeam* Person::getTeam() {
 
 PersonCamera* Person::getCamera() {
     return this->camera;
-}
-
-/* others */
-void Person::setSpawned(bool isSpawned) {
-    this->spawned = isSpawned;
-}
-
-bool Person::isSpawned() const {
-    return this->spawned;
-}
-
-void Person::setAuthorized(bool isAuthorized) {
-    this->authorized = isAuthorized;
-}
-
-bool Person::isAuthorized() const {
-    return this->authorized;
 }

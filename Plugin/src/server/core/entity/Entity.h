@@ -6,5 +6,9 @@
 #pragma once
 
 class Entity {
-
+private:
+protected:
+public:
+    Entity();
+    virtual ~Entity() = 0;
 };

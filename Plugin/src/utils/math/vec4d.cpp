@@ -4,8 +4,13 @@
 
 #include "geometry.h"
 
+#include "boost/format.hpp"
+
+using namespace std;
+using namespace boost;
 using namespace geometry;
 
+// =============== constructors & destructors
 vec4d::vec4d() : vec3d(0.0, 0.0, 0.0), a(0.0) {
 
 }
@@ -26,14 +31,22 @@ vec4d::vec4d(const vec4d& v) : vec3d(v.x, v.y, v.z), a(v.a) {
 
 }
 
-bool vec4d::operator==(const vec4d& v) {
+// =============== operators
+bool vec4d::operator==(const vec4d& v) const {
 	return (x == v.x && y == v.y && z == v.z && a == v.a);
 }
 
-float& vec4d::operator[](unsigned int index) {
+float& vec4d::operator[](unsigned int index) const {
 	return *((float*)this + index);
 }
 
+// =============== methods
+string vec4d::toString() const {
+    format fmt = format("%s, a = %f") % vec3d::toString() % a;
+    return fmt.str();
+}
+
+// =============== setters & getters
 void vec4d::setA(const float a) {
 	this->a = a;
 }

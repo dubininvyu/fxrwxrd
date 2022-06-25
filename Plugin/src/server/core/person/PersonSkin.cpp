@@ -7,15 +7,15 @@
 #include "Person.h"
 #include "natives.h"
 
-PersonSkin::PersonSkin(const unsigned int skin) : PersonSkin(nullptr, skin) {
+PersonSkin::PersonSkin(const skinID_t skin) : PersonSkin(nullptr, skin) {
 
 }
 
-PersonSkin::PersonSkin(Person* person, const unsigned int skin) : person(person), skin(skin) {
+PersonSkin::PersonSkin(Person* person, const skinID_t skin) : person(person), skin(skin) {
 
 }
 
-void PersonSkin::setSkin(const unsigned int skin) {
+void PersonSkin::setSkin(const skinID_t skin) {
     this->skin = skin;
 
     if (person != nullptr && person->isActive()) {
@@ -23,7 +23,7 @@ void PersonSkin::setSkin(const unsigned int skin) {
     }
 }
 
-unsigned int PersonSkin::getSkin() const {
+skinID_t PersonSkin::getSkin() const {
     return skin;
 }
 
@@ -43,6 +43,6 @@ bool PersonSkin::isValid() {
     return isValid(this->skin);
 }
 
-bool PersonSkin::isValid(const unsigned int skin) {
+bool PersonSkin::isValid(const skinID_t skin) {
     return (skin >= MIN_ID && skin <= MAX_ID);
 }

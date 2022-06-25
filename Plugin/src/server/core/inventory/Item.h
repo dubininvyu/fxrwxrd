@@ -5,40 +5,57 @@
 #pragma once
 
 #include "Entity.h"
+#include "ItemType.h"
+
 #include <string>
 
-class Item : Entity {
+using namespace std;
+
+typedef size_t itemID_t;
+
+class Item : public virtual Entity {
 public:
-    static unsigned int START_ID;
 private:
 protected:
-    virtual ~Item();
+    itemID_t id;
+    string name;
 
-    unsigned int id;
-    std::string name;
+    ItemType type;
 
     float weight;
+    float length;
+    float width;
+    float height;
+
     float volume;
+
+    // =============== setters & getters
+    void setID(const itemID_t id);
+    itemID_t getID() const;
 public:
-    //Item(std::string name, float weight = 0, float volume = 0);
+    // =============== constructors & destructors
+    //Item(const ItemType type, const string& name, const float weight, const float length, const float width, const float height);
+    virtual ~Item();
 
-    virtual void calculate() = 0;
+    // =============== methods
+    virtual void compute();
 
-    virtual float MIN_WEIGHT() const = 0;
-    virtual float MIN_VOLUME() const = 0;
-    virtual float MIN_VOLUME_LENGTH() const = 0;
-    virtual float MIN_VOLUME_WIDTH() const = 0;
-    virtual float MIN_VOLUME_HEIGHT() const = 0;
+    // =============== setters & getters
+    void setName(const string& name);
+    string getName() const;
 
-    void setID(unsigned int id);
-    unsigned int getID();
-
-    void setName(std::string name);
-    std::string getName();
-
-    void setWeight(float weight);
+    void setWeight(const float weight);
     float getWeight() const;
 
-    void setVolume(float volume);
+    void setVolume(const float volume);
     float getVolume() const;
+
+    void setLength(const float length);
+    float getLength() const;
+
+    void setWidth(const float width);
+    float getWidth() const;
+
+    void setHeight(const float height);
+    float getHeight() const;
 };

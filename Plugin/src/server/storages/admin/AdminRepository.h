@@ -11,7 +11,6 @@ class AdminRepository : public MySQLRepository {
 private:
 protected:
     Player* player;
-    Mode mode;
 public:
     AdminRepository(Player* player, const Mode mode = MODE_NOPE);
     virtual ~AdminRepository();
@@ -24,6 +23,6 @@ public:
     unsigned int createAdmin(const Admin::AdminLevel level, const string& password);
     bool destroyAdmin();
 
-    unsigned int getUID() const;
-    unsigned int getUID(const string& password) const;
+    adminID_t getID() const;
+    adminID_t getID(const string& password) const;
 };

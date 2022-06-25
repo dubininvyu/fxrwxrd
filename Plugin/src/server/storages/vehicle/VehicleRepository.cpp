@@ -5,8 +5,9 @@
 #include "VehicleRepository.h"
 #include "Vehicle.h"
 #include "MainDatabase.h"
-#include "ErrorLog.h"
 #include "geometry.h"
+
+#include "logs.h"
 
 #include "boost/format.hpp"
 #include "json-parser/json.hpp"
@@ -17,10 +18,10 @@ using namespace geometry;
 
 using json = nlohmann::json;
 
-VehicleRepository::VehicleRepository(Vehicle* vehicle, const Mode mode) : MySQLRepository(), vehicle(vehicle), mode(mode) {
-    if (mode & MODE_READ_ALL) {
-        preload();
-    }
+typedef VehicleColor::Color Color;
+
+VehicleRepository::VehicleRepository(Vehicle* vehicle, const Mode mode) : MySQLRepository(mode), vehicle(vehicle) {
+
 }
 
 VehicleRepository::~VehicleRepository() {
@@ -55,20 +56,28 @@ unsigned int VehicleRepository::load() {
     for (int i = 0; i < rows; i++) {
         MYSQL_ROW row = result.fetchRow();
 
-        vec4d position (
+        vec4d position(
                 atof(row[COORD_X]),
-                atof(row[COORD_X]),
-                atof(row[COORD_X]),
-                atof(row[COORD_X])
+                atof(row[COORD_Y]),
+                atof(row[COORD_Z]),
+                atof(row[COORD_A])
         );
 
-        unsigned int model = atoi(row[MODEL]);
+        modelID_t model = atoi(row[MODEL]);
         bool siren = atoi(row[SIREN]);
+        colorID_t colors[VehicleColor::colorMax];
 
-        json json = json::parse(row[COLOR]);
-        int colors[2] {json["color"]["main"][0], json["color"]["main"][1]};
+        try {
+            json json = json::parse(row[COLOR]);
+            colors[Color::COLOR_PRIMARY] = json["main"][Color::COLOR_PRIMARY];
+            colors[Color::COLOR_SECONDARY] = json["main"][Color::COLOR_SECONDARY];
+        }
+        catch (const json::exception& exception) {
+            string message = "Couldn't parse vehicle color: " + string(exception.what());
+            ErrorLog(__FILE__, __LINE__, message).print();
+        }
 
-        Vehicle* vehicle = Vehicle::create(model, position, colors, -1, siren);
+        Vehicle* vehicle = Vehicle::create(model, position, colors, -1, true);
 
         if (!vehicle) {
             ErrorLog(__FILE__, __LINE__, "Error loading vehicles").print();

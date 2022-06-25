@@ -22,7 +22,7 @@ PlayerSessionRepository::~PlayerSessionRepository() {
 
 /* main */
 bool PlayerSessionRepository::preload() {
-
+    return true;
 }
 
 unsigned int PlayerSessionRepository::load() {
@@ -35,7 +35,7 @@ unsigned int PlayerSessionRepository::block() {
 
 unsigned int PlayerSessionRepository::update(const PlayerDisconnectHandler::Reason reason) {
     format fmt = format("UPDATE `accounts_sessions` SET `online` = '-1', `disconnect_reason` = '%d' WHERE `account` = '%d' AND `online` != -1")
-                 % reason % player->getUID();
+                 % reason % player->getAccount()->getID();
 
     MySQLConnector connector(MainDatabase::getInstance());
     bool result = connector.query(fmt.str());
@@ -43,9 +43,9 @@ unsigned int PlayerSessionRepository::update(const PlayerDisconnectHandler::Reas
     return !result;
 }
 
-unsigned int PlayerSessionRepository::create() {
+accountID_t PlayerSessionRepository::create() {
     format fmt = format("INSERT INTO `accounts_sessions` (`account`, `online`, `ip`) VALUES ('%d', '%d', '%s')")
-                 % player->getUID() % player->getID() % player->getIP()->getIP();
+                 % player->getAccount()->getID() % player->getID() % player->getIP()->getIP();
 
     MySQLConnector connector(MainDatabase::getInstance());
     connector.query(fmt.str());

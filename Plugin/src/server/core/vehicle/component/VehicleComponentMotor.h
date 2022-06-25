@@ -12,11 +12,11 @@ private:
 protected:
 public:
     VehicleComponentMotor();
-    ~VehicleComponentMotor();
+    virtual ~VehicleComponentMotor();
 
-    virtual unsigned int getFuelConsumption() = 0;
+    virtual float getFuelConsumption() = 0;
 
-    virtual unsigned int getMinSpeed() = 0;
-    virtual unsigned int getMaxSpeed() = 0;
+    virtual float getMinSpeed();
+    virtual float getMaxSpeed() = 0;
 };
 

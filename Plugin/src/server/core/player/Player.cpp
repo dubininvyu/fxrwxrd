@@ -2,56 +2,67 @@
 // Created by dubininvyu on 01.05.2022.
 //
 
-
 #include "Player.h"
+#include "ItemType.h"
 
 using namespace std;
 
 const unsigned int Player::MAX_LENGTH_SERIAL = 40;
 
+size_t Player::count = 0;
 Player* Player::players[MAX_COUNT] = {nullptr};
 
-Player::Player() : Person(INVALID_ID, false) {
+Player::Player() : Player(INVALID_ID, false) {
 
 }
 
-Player::Player(unsigned int playerID) : Person(playerID, true) {
+Player::Player(const personID_t id, const bool active) : Person(id, active)/*,
+    Item(ItemType::TYPE_PERSON, "", 0.0, 0.0, 0.0, 0.0)*/ {
+
     spawned = false;
     authorized = false;
 
-    // fields
-    admin = new Admin(this);
-    password = new PlayerPassword(this);
-    license = new PlayerLicense(this);
+    if (id != INVALID_ID) {
+        count++;
 
-    // managers
-    dialogManager = new DialogManager(this);
-    stateMachineManager = new StateMachineManager(this);
+        // fields
+        account = new Account(this);
+        admin = new Admin(this);
+        rconAdmin = new RconAdmin(this);
 
-    // systems
-    locale = &PlayerLocale::getLocale(LANGUAGE_DEFAULT);
+        // managers
+        dialogManager = new DialogManager(this);
+        stateMachineManager = new StateMachineManager(this);
+
+        // systems
+    }
+
 }
 
 Player::~Player() {
-    // fields
-    delete admin;
-    delete password;
-    delete license;
+    if (id != INVALID_ID) {
+        count--;
 
-    // managers
-    delete dialogManager;
-    delete stateMachineManager;
+        // fields
+        delete account;
+        delete admin;
+        delete rconAdmin;
 
-    // systems
+        // managers
+        delete dialogManager;
+        delete stateMachineManager;
+
+        // systems
+    }
 }
 
-Player* Player::create(const int playerID) {
-    if (!isValid(playerID)) {
+Player* Player::create(const personID_t id) {
+    if (!isValid(id)) {
         return nullptr;
     }
 
-    Player* player = new Player(playerID);
-    players[playerID] = player;
+    Player* player = new Player(id, true);
+    players[id] = player;
 
     return player;
 }
@@ -62,7 +73,7 @@ void Player::remove() const {
     delete player;
 }
 
-Player* Player::get(const int playerID) {
+Player* Player::get(const personID_t playerID) {
     if (!isValid(playerID)) {
         return nullptr;
     }
@@ -75,17 +86,7 @@ Player* Player::get(const int playerID) {
     return player;
 }
 
-unsigned int Player::getCount() {
-    unsigned int count = 0;
-
-    for (Player* player : players) { // iterate array of players
-        if (player == nullptr) { // there is no player in this locale
-            continue;
-        }
-
-        count++;
-    }
-
+const size_t Player::getCount() {
     return count;
 }
 
@@ -105,37 +106,34 @@ bool Player::isValid() const {
     return false;
 }
 
-bool Player::isValid(const unsigned int playerID) {
-    return (playerID >= MIN_ID && playerID <= MAX_ID);
+bool Player::isValid(const personID_t id) {
+    return (id >= MIN_ID && id <= MAX_ID);
+}
+
+void Player::call(const function<void(Player*)> f) {
+    f(this);
+}
+
+void Player::callEveryone(const function<void(Player*)> f) {
+    for (Player* player : players) {
+        f(player);
+    }
 }
 
 /* setters & getters */
-Admin* Player::getAdmin() {
-    return this->admin;
-}
 
-void Player::setUID(const unsigned int uid) {
-    this->uid = uid;
-}
-unsigned int Player::getUID() const {
-    return this->uid;
-}
 
 /* main */
-PlayerPassword* Player::getPassword() {
-    return password;
+Account* Player::getAccount() {
+    return account;
 }
 
-void Player::setLocale(Language language) {
-    this->locale = &PlayerLocale::getLocale(language);
+Admin* Player::getAdmin() {
+    return admin;
 }
 
-PlayerLocale* Player::getLocale() const {
-    return locale;
-}
-
-PlayerLicense* Player::getLicense() {
-    return license;
+RconAdmin* Player::getRconAdmin() {
+    return rconAdmin;
 }
 
 /* dynamic */
@@ -148,3 +146,10 @@ StateMachineManager* Player::getStateMachineManager() {
 }
 
 /* others */
+void Player::setAuthorized(const bool isAuthorized) {
+    authorized = isAuthorized;
+}
+
+bool Player::isAuthorized() const {
+    return authorized;
+}

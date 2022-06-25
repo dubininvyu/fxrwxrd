@@ -4,30 +4,19 @@
 
 #pragma once
 
-#include <string>
-#include <vector>
 #include "Item.h"
 
-class Inventory : Item {
+#include <string>
+#include <vector>
+
+using namespace std;
+
+class Inventory : public virtual Item, public vector<Item*> {
 private:
 protected:
-    std::string name;
-
-    float weight;
-    float volume;
-
-    std::vector<Item*> items = std::vector<Item*>();
+    float maxWeight;
 public:
-    Inventory(std::string name, float weight, float volume);
+    Inventory(const string& name, const float maxWeight, const float weight, const float length, const float width, const float height);
 
-    void setName(std::string name);
-    std::string getName();
-
-    void setWeight(float weight);
-    float getWeight();
-
-    void setVolume(float volume);
-    float getVolume();
-
-    std::vector<Item*> getItems();
+    float getMaxWeight() const;
 };

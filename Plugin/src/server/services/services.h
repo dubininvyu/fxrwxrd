@@ -8,22 +8,46 @@
 #include "PlayerService.h"
 #include "ServerService.h"
 
-/* actor */
+/*
+ * actor
+ */
 
-/* admin */
+/*
+ * admin
+ */
 #include "AdminAuthorizationService.h"
 
-/* object */
+/*
+ * config
+ */
+#include "RconConfigService.h"
+#include "RegistrationConfigService.h"
 
-/* player */
+/*
+ * locale
+ */
+#include "LocaleService.h"
+
+/*
+ * object
+ */
+
+/*
+ * player
+ */
 #include "PlayerAuthenticationService.h"
 #include "PlayerAuthorizationService.h"
 #include "PlayerPositionService.h"
 #include "PlayerRegistrationService.h"
 #include "PlayerSessionService.h"
 
-/* server */
+/*
+ * server
+ */
 #include "ServerConfigService.h"
 
-/* vehicle */
+/*
+ * vehicle
+ */
+#include "VehicleModelService.h"
 #include "VehicleDataService.h"
